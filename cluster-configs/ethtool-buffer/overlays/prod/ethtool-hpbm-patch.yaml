@@ -1,0 +1,13 @@
+- op: replace
+  path: '/metadata/name'
+  value: 07-hpbm-increase-rx-tx-ring-buffer
+
+- op: replace
+  path: '/metadata/labels'
+  value: 
+    machineconfiguration.openshift.io/role: hpbm
+
+
+- op: replace
+  path: '/spec/config/storage/files/0/contents/source'
+  value: data:text/plain;charset=utf-8;base64,IyEvYmluL2Jhc2gKCmRyaXZlcj0kKG5tY2xpIC10IC1tIHRhYnVsYXIgLWYgZ2VuZXJhbC5kcml2ZXIgZGV2IHNob3cgIiR7REVWSUNFX0lGQUNFfSIpCgppZiBbWyAiJDIiID09ICJ1cCIgJiYgIiR7ZHJpdmVyfSIgPT0gImJueHRfZW4iICYmIC1mIC91c3Ivc2Jpbi9ldGh0b29sIF1dOyB0aGVuCiAgbG9nZ2VyIC1zICJpbmNyZWFzZS1yeC10eC1yaW5nLWJ1ZmZlciB0cmlnZ2VyZWQgYnkgJHsyfSBvbiBkZXZpY2UgJHtERVZJQ0VfSUZBQ0V9LiIKICBldGh0b29sIC1HICR7REVWSUNFX0lGQUNFfSByeCAyMDQ3IHR4IDIwNDcKZWxzZQogIGxvZ2dlciAtcyAiRGV2aWNlICR7REVWSUNFX0lGQUNFfSBpcyBub3QgYXQgdGhlIGxpc3QiCmZpCgo=

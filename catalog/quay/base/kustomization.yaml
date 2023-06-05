@@ -1,0 +1,5 @@
+resources: 
+  - subscription.yaml
+  - init-config-bundle-secret.yaml
+  - quay-instance.yaml  
+  - quay-console.yaml

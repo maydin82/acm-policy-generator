@@ -1,0 +1,22 @@
+apiVersion: remediation.medik8s.io/v1alpha1
+kind: NodeHealthCheck
+metadata:
+  name: nodehealthcheck-hpbm
+spec:
+  minHealthy: 51% 
+  remediationTemplate: 
+    apiVersion: self-node-remediation.medik8s.io/v1alpha1
+    name: self-node-remediation-resource-deletion-template
+    namespace: openshift-operators
+    kind: SelfNodeRemediationTemplate
+  selector: 
+    matchExpressions:
+      - key: node-role.kubernetes.io/hpbm
+        operator: Exists
+  unhealthyConditions: 
+    - type: Ready
+      status: "False"
+      duration: 300s 
+    - type: Ready
+      status: Unknown
+      duration: 300s 

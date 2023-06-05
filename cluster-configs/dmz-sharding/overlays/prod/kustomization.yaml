@@ -1,0 +1,6 @@
+resources:
+  - ../../base
+patches:
+  - path: dmz-sharding-patch.yaml
+    target:
+      kind: IngressController 

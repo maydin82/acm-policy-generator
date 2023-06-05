@@ -1,0 +1,28 @@
+- op: add
+  path: '/spec/storage'
+  value: 
+    pvc:
+      claim: ocs4registry
+
+- op: add
+  path: /spec/nodeSelector
+  value:
+    node-role.kubernetes.io/infra-generic: ""
+- op: add
+  path: /spec/tolerations
+  value:
+    - key: infra
+      value: reserved
+      effect: NoSchedule
+    - key: infra
+      value: reserved
+      effect: NoExecute
+ 
+- op: replace
+  path: '/spec/replicas'
+  value: 3
+
+- op: add
+  path: '/spec/defaultRoute'
+  value: true
+

@@ -1,0 +1,6 @@
+resources:
+  - ../../base
+patches:
+  - path: tuned-sysctl-patch.yaml
+    target:
+      kind: Tuned

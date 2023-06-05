@@ -1,0 +1,42 @@
+apiVersion: redhatcop.redhat.io/v1alpha1 
+kind: GroupSync
+metadata:
+  name: ldap-groupsync
+  namespace: group-sync-operator
+spec:
+  providers:
+    - ldap:
+        credentialsSecret:
+          kind: Secret
+          name: ldap-group-sync
+          namespace: group-sync-operator
+        insecure: true
+        rfc2307:
+          groupMembershipAttributes:
+            - member
+          groupNameAttributes:
+            - cn
+          groupUIDAttribute: dn
+          groupsQuery:
+            baseDN: 'OU=Openshift,OU=Groups,DC=company,DC=com,DC=tr'
+            derefAliases: never
+            filter: (objectClass=groupOfMembers)
+            pageSize: 0
+            scope: sub
+          tolerateMemberNotFoundErrors: false
+          userNameAttributes:
+            - sAMAccountName
+          userUIDAttribute: dn
+          usersQuery:
+            baseDN: 'DC=company,DC=com,DC=tr'
+            derefAliases: never
+            pageSize: 0
+            scope: sub
+        url: 'ldap://company.com.tr/'
+        whitelist:
+          - >-
+            CN=OCPAdmins,OU=Openshift,OU=Groups,DC=company,DC=com,DC=tr
+          - >-
+            CN=OCPUsers,OU=Openshift,OU=Groups,DC=company,DC=com,DC=tr
+      name: activedirectory
+  schedule: '0 * * * *'    

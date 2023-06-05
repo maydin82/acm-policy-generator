@@ -1,0 +1,21 @@
+- op: add
+  path: '/spec/infra'
+  value: 
+    nodePlacement:
+      nodeSelector:
+        node-role.kubernetes.io/infra-generic: ""
+      tolerations:
+        - key: infra
+          value: reserved
+          effect: NoSchedule
+        - key: infra
+          value: reserved
+          effect: NoExecute
+- op: add
+  path: '/spec/workloads'
+  value:
+    nodePlacement:
+      nodeSelector:
+        node-role.kubernetes.io/hpbm: ""
+
+

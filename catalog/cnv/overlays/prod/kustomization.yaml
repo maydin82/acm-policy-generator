@@ -1,0 +1,6 @@
+resources:
+  - ../../base
+patches:
+- target:
+    kind: HyperConverged
+  path: patch-hyperconverged.yaml

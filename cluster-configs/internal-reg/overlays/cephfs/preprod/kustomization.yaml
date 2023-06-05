@@ -1,0 +1,6 @@
+resources:
+  - ../../../base
+patches:
+- target:
+    kind: Config
+  path: patch-image-registry.yaml

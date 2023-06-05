@@ -1,0 +1,11 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../base
+patches:
+  - path: ./logging-patch.yaml
+    target:
+      kind: ClusterLogging
+  - path: ./logforward-patch.yaml
+    target:
+      kind: ClusterLogForwarder

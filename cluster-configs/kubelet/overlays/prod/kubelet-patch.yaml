@@ -1,0 +1,3 @@
+- op: add
+  path: /spec/kubeletConfig/maxPods
+  value: 500

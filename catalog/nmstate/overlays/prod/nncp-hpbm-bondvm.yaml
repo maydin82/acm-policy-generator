@@ -1,0 +1,40 @@
+apiVersion: nmstate.io/v1
+kind: NodeNetworkConfigurationPolicy
+metadata:
+  name:  workerhp
+spec:
+  nodeSelector:
+    node-role.kubernetes.io/hpbm: ""
+
+  desiredState:
+    interfaces:
+
+        - name: bondvm
+          description: Bonding ens1f1np1 and ens4f1np1 for Linux bridge
+          ipv4:
+            enabled: false
+          type: bond
+          state: up
+          link-aggregation:
+            mode: 802.3ad
+            options:
+              lacp_rate: fast
+              miimon: 100
+            slaves:
+            - ens1f1np1
+            - ens4f1np1
+
+
+        - name: br1
+          description: Linux bridge on bond
+          type: linux-bridge
+          state: up
+          bridge:
+            options:
+              stp:
+                enabled: false
+            port:
+            - name: bondvm
+          ipv4:
+            enabled: false
+

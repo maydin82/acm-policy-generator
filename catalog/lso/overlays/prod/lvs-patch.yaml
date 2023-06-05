@@ -1,0 +1,15 @@
+- op: replace
+  path: '/spec/deviceInclusionSpec/minSize'
+  value: 2Ti
+
+- op: add
+  path: '/spec/nodeSelector'
+  value:
+    nodeSelectorTerms:
+      -  matchExpressions:
+         - key: kubernetes.io/hostname
+           operator: In
+           values:
+           - odf1.prod.company.com.tr
+           - odf2.prod.company.com.tr
+           - odf3.prod.company.com.tr

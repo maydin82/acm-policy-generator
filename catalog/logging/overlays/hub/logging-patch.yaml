@@ -1,0 +1,18 @@
+- op: add
+  path: '/spec/logStore/elasticsearch/nodeSelector'
+  value:
+    node-role.kubernetes.io/infra-generic: ""
+
+- op: add 
+  path: '/spec/visualization/kibana/nodeSelector'
+  value:
+    node-role.kubernetes.io/infra-generic: ""
+
+- op: replace
+  path: '/spec/logStore/elasticsearch/storage/storageClassName'
+  value: 'thin-csi'
+
+- op: replace
+  path: '/spec/logStore/elasticsearch/storage/size'
+  value: '100G'
+

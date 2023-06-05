@@ -1,0 +1,4 @@
+resources:
+  - subscription.yaml
+  - local-volumediscovery.yaml
+  - local-volumeset.yaml  

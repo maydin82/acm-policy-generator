@@ -1,0 +1,18 @@
+resources:
+  - alertmanager-secret.yaml
+configMapGenerator:
+- name: cluster-monitoring-config
+  namespace: openshift-monitoring
+  files:
+  - config.yaml
+  behavior: create
+# secretGenerator:     # #  secretgenerator casuse  flaps at policy
+# - name: alertmanager-main
+#   namespace: openshift-monitoring
+#   files:
+#   - alertmanager.yaml 
+#   behavior: create
+
+generatorOptions:
+ disableNameSuffixHash: true
+

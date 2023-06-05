@@ -1,0 +1,7 @@
+resources:
+  - policy-object-storage.yaml
+  - policy-ocm-console.yaml
+  - policy-ocm-observability.yaml
+  - policy-ocm-pull-secret.yaml  
+  - bucketclass.yaml
+  - ocm-secret.yaml

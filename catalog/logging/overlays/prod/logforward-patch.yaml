@@ -1,0 +1,11 @@
+[
+  {"op": "replace",
+   "path": "/spec/outputs/0/url",
+   "value": "udp://5.5.5.5:514"},
+  {"op": "replace",
+   "path": "/spec/pipelines/0/labels/syslog",
+   "value": "prodocp"},
+  {"op": "replace",
+   "path": "/spec/pipelines/1/labels/syslog",
+   "value": "prodocp"}
+]
