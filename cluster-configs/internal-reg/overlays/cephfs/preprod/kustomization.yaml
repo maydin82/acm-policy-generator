@@ -1,5 +1,6 @@
 resources:
   - ../../../base
+  - cephfs-pvc.yaml
 patches:
 - target:
     kind: Config
