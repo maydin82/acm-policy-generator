@@ -1,6 +1,29 @@
 # acm-policy-generator
 
-- Any name for the Subscription name
+-   Add the user who will create the suscription to the open-cluster-management:subscription-admin rolebinding
+
+Example:
+
+```
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: open-cluster-management:subscription-admin
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: open-cluster-management:subscription-admin
+subjects:
+- apiGroup: rbac.authorization.k8s.io
+  kind: User
+  name: kube:admin
+- apiGroup: rbac.authorization.k8s.io
+  kind: User
+  name: system:admin
+```
+
+
+- Provide any name for the Subscription name
 
 - "acm-policies" as the namespace
 
