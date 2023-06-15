@@ -1,5 +1,8 @@
 # acm-policy-generator
 
+
+# Use with ACM Subscription
+
 -   Add the user who will create the suscription to the open-cluster-management:subscription-admin rolebinding
 
 Example:
@@ -34,3 +37,8 @@ subjects:
 Select "Deploy only to local cluster" 
 
 ![Alt text](acm_sub_2.png "ACM Subscription")
+
+
+# Use with ArgoCD
+
+Please see the section "INTEGRATING WITH OPENSHIFT GITOPS (ARGOCD)" at the link https://cloud.redhat.com/blog/generating-governance-policies-using-kustomize-and-gitops to enable policy-generator plugin. 
