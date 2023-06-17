@@ -110,11 +110,11 @@ Configure max pods per node
 
 Options:
 
-- with LSO backend
+with LSO backend
 
-- with thin backend
+with thin backend
 
-- Noobaa only deployment
+Noobaa only deployment
 
 - Migration Toolkit For Container installation 
 
