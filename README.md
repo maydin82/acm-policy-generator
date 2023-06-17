@@ -44,6 +44,8 @@ Please see the section "INTEGRATING WITH OPENSHIFT GITOPS (ARGOCD)" at the link 
 
 # Content
 
+TESTED WITH OCP 4.12
+
 ## Cluster Configs
 
 - Tolerates any tains for DNS daemon pods
@@ -94,5 +96,36 @@ Configure max pods per node
 
 - Tuned operator configuration to increase the kernel TCP buffers (for Baremetal Deployments)
   
+## Operator Catalog
+
+- ACS central installation to the hub cluster
+
+- ACS secured cluster installtion to the managed clusters
+
+- ACM observability installation
+
+- CNV installation (For Baremetal Clusters)
+
+- ODF installation
+
+Options:
+
+- with LSO backend
+
+- with thin backend
+
+- Noobaa only deployment
+
+- Migration Toolkit For Container installation 
+
+- Node Healthcheck and Self Node Remediation installation (For Cloud Agnostic Installations)
+
+- NMState installation and bridge configurtion 
+
+- OCP Compliance installation with ocp-cis and ocp-cis-node profiles
+
+- Logging/Log Forwarder installation and Configuration
+
+- QUAY installation/configuration to the Hub cluster
 
 
