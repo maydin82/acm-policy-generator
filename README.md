@@ -1,4 +1,3 @@
-# acm-policy-generator
 
 
 # Use with ACM Subscription
@@ -42,3 +41,58 @@ Select "Deploy only to local cluster"
 # Use with ArgoCD
 
 Please see the section "INTEGRATING WITH OPENSHIFT GITOPS (ARGOCD)" at the link https://cloud.redhat.com/blog/generating-governance-policies-using-kustomize-and-gitops to enable policy-generator plugin. 
+
+# Content
+
+## Cluster Configs
+
+- Tolerates any tains for DNS daemon pods
+
+- Encyrypts etcd
+
+- Creates a etcd backup
+
+- Configures chronyd for master and workers
+
+- Sets the timezone 
+
+- Configured route sharding if required
+
+- Increases the interface card buffers (for Baremetal deployments)
+
+- Ingress
+
+Configures the replica number
+
+Other options:
+
+Tolerates the taints for router nodes
+
+Node Placement
+
+- Internal Registry Options:
+
+Use noobaa backend
+
+Use Cephfs backend
+
+- Kubelet config; Garbage collection
+
+Other options:
+
+Configure max pods per node
+
+- Use Ldap Group Operator for LDAP group sync
+
+- Configure LDAP (non-TLS only for now)
+
+- Configure monitoring/Alert Manager (includes tolerations for infra nodes)
+
+- User workload monitoring
+
+- Configures proxy for additional CAs
+
+- Tuned operator configuration to increase the kernel TCP buffers (for Baremetal Deployments)
+  
+
+
