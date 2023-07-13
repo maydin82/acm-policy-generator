@@ -20,7 +20,6 @@ spec:
                 - '-c'
                 - >-
                   /usr/local/bin/etcd-backup.sh && find /etcd-backup/ -type d -mtime +5 | xargs rm -rf > /dev/null 2>&1
-              env: null
               image: >-
                 quay.io/openshift-release-dev/ocp-v4.0-art-dev@sha256:6a2378154881e6f9a4638f41242518d850e19b0d7d9ef74a2be55b87f4625e87
               imagePullPolicy: IfNotPresent
