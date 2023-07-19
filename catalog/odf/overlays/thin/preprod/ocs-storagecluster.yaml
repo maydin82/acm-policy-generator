@@ -18,4 +18,4 @@ spec:
         volumeMode: Block
     name: ocs-deviceset
     portable: true
-    replica: 3  # <-- dont touch this  
+    replica: 1  # <-- dont touch this  
