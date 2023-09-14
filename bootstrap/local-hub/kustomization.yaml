@@ -3,3 +3,4 @@ kind: Kustomization
 resources:
 - ../../acm-configs
 - ../../cluster-configs
+- ../../catalog
