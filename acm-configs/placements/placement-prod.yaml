@@ -8,4 +8,4 @@ spec:
   - requiredClusterSelector:
       labelSelector:
         matchExpressions:
-          - {key: env, operator: In, values: ["prod"]}
+          - {key: environment, operator: In, values: ["prod"]}
