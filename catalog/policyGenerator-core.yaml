@@ -19,7 +19,12 @@ policyDefaults:
 policies:
 
 
-
+- name: odf-hub
+  disabled: false
+  manifests:
+    - path: ./odf/overlays/noobaa-only/hub
+  policySets:
+    - policyset-hub-catalog
 
 - name: acm-observability
   disabled: false
