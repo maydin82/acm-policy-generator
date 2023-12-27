@@ -5,8 +5,6 @@ metadata:
   namespace: openshift-storage
 spec:
   multiCloudGateway:
-    resources:
-       noobaa-db-vol: 100Gi
     dbStorageClassName: thin
     reconcileStrategy: standalone
 
