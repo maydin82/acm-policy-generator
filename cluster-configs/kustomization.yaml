@@ -4,5 +4,5 @@ commonAnnotations:
   argocd.argoproj.io/compare-options: IgnoreExtraneous
 generators:
 - policyGenerator-clusterconfig-all.yaml
-#- policyGenerator-clusterconfig-hub.yaml
+- policyGenerator-clusterconfig-hub.yaml
 - policyGenerator-clusterconfig-prod.yaml
