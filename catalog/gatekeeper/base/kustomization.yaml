@@ -1,2 +1,3 @@
 resources:
   - gatekeeper-subscription.yaml
+  - gatekeeper-exclude-ns.yaml
