@@ -34,7 +34,13 @@ policies:
   policySets:
     - policyset-hub-catalog
 
-
+- name: gatekeeper-prod
+  disabled: false
+  manifests:
+    - path: ./gatekeeper/overlays/prod
+  complianceType: "musthave"
+  policySets:
+    - policyset-prod-catalog
 
 policySets:
   - description: Catalog policies  applied to hub cluster
