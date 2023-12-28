@@ -1,6 +1,5 @@
 resources:
   - ../../base
-  - custom-alert.yaml
 patches:
   - path: bucketclass-patch.yaml
     target:

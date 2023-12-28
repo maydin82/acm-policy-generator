@@ -35,7 +35,6 @@ policies:
     - policyset-hub-catalog
 
 - name: gatekeeper-prod
-  configurationPolicyAnnotations: {"policy.open-cluster-management.io/disable-templates": "true"}
   disabled: false
   manifests:
     - path: ./gatekeeper/overlays/prod
