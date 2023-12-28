@@ -23,10 +23,9 @@ policies:
 ####  Cluster Policy Starts For Hub cluster ####
 
 
-- name: conf-chronyd-hub
+- name: add-cluster-admins
   manifests:
-    - path: ./chronyd/overlays/hub
-
+    - path: ./roles/overlays/hub
 
 
 
