@@ -23,7 +23,7 @@ policies:
 ####  Cluster Policy Starts For Hub cluster ####
 
 
-- name: add-cluster-admins
+- name: add-cluster-admins-hub
   manifests:
     - path: ./roles/overlays/hub
 
