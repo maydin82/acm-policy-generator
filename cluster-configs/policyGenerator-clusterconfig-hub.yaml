@@ -12,7 +12,7 @@ policyDefaults:
   namespace: acm-policies
   metadataComplianceType: "musthave"
   complianceType: "mustonlyhave"
-  remediationAction: enforce
+  remediationAction: inform
   severity: medium
   policySets:
     - policyset-hub-clusterconfig
