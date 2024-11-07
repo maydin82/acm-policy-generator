@@ -4,6 +4,11 @@ metadata:
   name: placement-all
   namespace: acm-policies
 spec:
+  tolerations:
+    - key: cluster.open-cluster-management.io/unreachable
+      operator: Exists
+    - key: cluster.open-cluster-management.io/unavailable
+      operator: Exists
   predicates:
   - requiredClusterSelector:
       labelSelector:
