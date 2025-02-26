@@ -1,0 +1,7 @@
+apiVersion: v1
+data:
+  ca.crt: changeme 
+kind: ConfigMap
+metadata:
+  name: ca-config-map
+  namespace: openshift-config

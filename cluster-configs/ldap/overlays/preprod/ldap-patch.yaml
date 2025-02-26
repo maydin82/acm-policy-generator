@@ -1,9 +1,0 @@
-[
-  {"op": "replace",
-   "path": "/spec/identityProviders/0/ldap/bindDN",
-   "value": "CN=ldapsvc,OU=ServiceAccounts,DC=company,DC=com,DC=tr"},
-  {"op": "replace",
-   "path": "/spec/identityProviders/0/ldap/url",
-   "value": "ldap://company.com.tr/DC=company,DC=com,DC=tr?sAMAccountName"}
-
-]

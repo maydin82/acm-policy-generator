@@ -33,4 +33,4 @@ spec:
     name: ocs-deviceset
     placement: {}
     portable: false
-    replica: 3  # <-- dont touch this  
+    replica: 1  # <-- dont touch this  

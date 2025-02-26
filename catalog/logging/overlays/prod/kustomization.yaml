@@ -3,9 +3,7 @@ kind: Kustomization
 resources:
   - ../../base
 patches:
-  - path: ./logging-patch.yaml
+  - path: ./patch-logging-subs.yaml
     target:
-      kind: ClusterLogging
-  - path: ./logforward-patch.yaml
-    target:
-      kind: ClusterLogForwarder
+      name: cluster-logging
+      kind: Subscription

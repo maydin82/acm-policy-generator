@@ -4,21 +4,24 @@ metadata:
   name: cluster
 spec:
   identityProviders:
-  - name: ldapidp
+  - name: ldap
     mappingMethod: claim
     type: LDAP
+
     ldap:
       attributes:
         id:
-        - dn
+        - sAMAccountName
         email:
         - mail
         name:
         - cn
         preferredUsername:
         - sAMAccountName
+      ca:
+        name: ca-config-map
       bindDN: "changeme"
       bindPassword:
         name: ldap-secret
-      insecure: true
+      insecure: false
       url: "changeme"

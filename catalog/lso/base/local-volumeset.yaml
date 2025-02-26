@@ -4,6 +4,11 @@ metadata:
   name: localblock
   namespace: openshift-local-storage
 spec:
+  nodeSelector:
+    nodeSelectorTerms:
+    - matchExpressions:
+      - key: node-role.kubernetes.io/odf
+        operator: Exists
   tolerations:
   - effect: NoSchedule
     key: node.ocs.openshift.io/storage
