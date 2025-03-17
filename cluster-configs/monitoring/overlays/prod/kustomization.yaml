@@ -1,5 +1,5 @@
 resources:
-  - alertmanager-secret.yaml
+  - alertmanager.yaml
 configMapGenerator:
 - name: cluster-monitoring-config
   namespace: openshift-monitoring

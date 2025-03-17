@@ -1,55 +1,81 @@
-global:
-  resolve_timeout: 5m
-  smtp_from: prod@company.com.tr
-  smtp_smarthost: 'websmtp2.company.com.tr:25'
-  smtp_hello: prod cluster
-  smtp_require_tls: false
-inhibit_rules:
-  - equal:
-      - namespace
-      - alertname
-    source_match:
-      severity: critical
-    target_match_re:
-      severity: warning|info
-  - equal:
-      - namespace
-      - alertname
-    source_match:
-      severity: warning
-    target_match_re:
-      severity: info
-receivers:
-  - name: Critical
-    email_configs:
-      - to: linuxadmin@company.com.tr
-  - name: CriticalKS
-    webhook_configs:
-      - url: 'http://obmwebhook.company.com.tr:30005/bsmc/rest/events/json_path'
-  - name: Default
-    email_configs:
-      - to: linuxadmin@company.com.tr
-  - name: WarningKS
-    webhook_configs:
-      - url: 'http://obmwebhook.company.com.tr:30005/bsmc/rest/events/json_path'
-  - name: Watchdog
-route:
-  group_by:
-    - namespace
-  group_interval: 5m
-  group_wait: 30s
-  receiver: Default
-  repeat_interval: 12h
-  routes:
-    - match:
-        alertname: Watchdog
-      receiver: Watchdog
-    - receiver: Critical
-      match:
-        severity: critical
-    - receiver: CriticalKS
-      match:
-        severity: critical
-    - receiver: WarningKS
-      match:
-        severity: warning
+apiVersion: policy.open-cluster-management.io/v1
+kind: ConfigurationPolicy
+metadata:
+  name: alertmanager
+spec:
+  remediationAction: enforce
+  severity: low
+  object-templates-raw: |
+
+    {{/* read the password */}}
+    {{hub $smtpsecret := lookup "v1" "Secret" "acm-policies" "generic-secret" hub}}
+
+    {{/* create the alertmanager config file as a template */}}
+    {{hub $alertConfig := `
+     global:
+       resolve_timeout: 5m
+     inhibit_rules:
+       - equal:
+           - namespace
+           - alertname
+         source_matchers:
+           - severity = critical
+         target_matchers:
+           - severity =~ warning|info
+       - equal:
+           - namespace
+           - alertname
+         source_matchers:
+           - severity = warning
+         target_matchers:
+           - severity = info
+       - equal:
+            - namespace
+         source_matchers:
+           - alertname = InfoInhibitor
+         target_matchers:
+           - severity = info
+     receivers:
+       - name: Default
+         email_configs:
+           - to: kaizen@halkbank.com.tr
+             from: pmoctmail@halkbank.com.tr
+             smarthost: 'webmaila.gen.halkbank.local:25'
+             auth_username: pmoctmail
+             auth_password: %[1]s
+             require_tls: false
+       - name: Watchdog
+       - name: Critical
+       - name: 'null'
+     route:
+       group_by:
+         - namespace
+       group_interval: 5m
+       group_wait: 30s
+       receiver: Default
+       repeat_interval: 12h
+       routes:
+         - matchers:
+             - alertname = Watchdog
+           receiver: Watchdog
+         - matchers:
+             - alertname = InfoInhibitor
+           receiver: 'null'
+         - matchers:
+             - severity = critical
+           receiver: Critical
+    ` hub}}
+
+    {{/* create the secret using the template */}}
+
+    - complianceType: mustonlyhave
+      objectDefinition:
+        apiVersion: v1
+        kind: Secret
+        metadata:
+          name: alertmanager-main
+          namespace: openshift-monitoring
+        type: Opaque
+        data:
+          alertmanager.yaml: |-
+              {{hub (printf $alertConfig ($smtpsecret.data.smtpPassword|base64dec)) | base64enc hub}}
