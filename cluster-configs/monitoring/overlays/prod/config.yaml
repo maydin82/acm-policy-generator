@@ -1,90 +1,130 @@
-enableUserWorkload: true
-prometheusK8s:
-  retention: 3d
-  volumeClaimTemplate:
-    metadata:
-      name: prometheus-pvc
-    spec:
-      storageClassName: ocs-storagecluster-ceph-rbd
-      resources:
-        requests:
-          storage: 50Gi
-  nodeSelector:
-    node-role.kubernetes.io/infra-generic: ""
-  tolerations:
-  - effect: NoSchedule
-    key: infra 
-    operator: Exists
-  - effect: NoExecute
-    key: infra
-    operator: Exists
-prometheusOperator:
-  nodeSelector:
-    node-role.kubernetes.io/infra-generic: ""
-  tolerations:
-  - effect: NoSchedule
-    key: infra
-    operator: Exists
-  - effect: NoExecute
-    key: infra
-    operator: Exists
-k8sPrometheusAdapter:
-  nodeSelector:
-    node-role.kubernetes.io/infra-generic: ""
-  tolerations:
-  - effect: NoSchedule
-    key: infra
-    operator: Exists
-  - effect: NoExecute
-    key: infra
-    operator: Exists
-kubeStateMetrics:
-  nodeSelector:
-    node-role.kubernetes.io/infra-generic: ""
-  tolerations:
-  - effect: NoSchedule
-    key: infra
-    operator: Exists
-  - effect: NoExecute
-    key: infra
-    operator: Exists
-telemeterClient:
-  nodeSelector:
-    node-role.kubernetes.io/infra-generic: ""
-  tolerations:
-  - effect: NoSchedule
-    key: infra
-    operator: Exists
-  - effect: NoExecute
-    key: infra
-    operator: Exists
-openshiftStateMetrics:
-  nodeSelector:
-    node-role.kubernetes.io/infra-generic: ""
-  tolerations:
-  - effect: NoSchedule
-    key: infra
-    operator: Exists
-  - effect: NoExecute
-    key: infra
-    operator: Exists
-thanosQuerier:
-  nodeSelector:
-    node-role.kubernetes.io/infra-generic: ""
-  tolerations:
-  - effect: NoSchedule
-    key: infra
-    operator: Exists
-  - effect: NoExecute
-    key: infra
-    operator: Exists
-alertmanagerMain:
-  nodeSelector:
-    node-role.kubernetes.io/infra-generic: ""
-  tolerations:
-  - effect: NoSchedule
-    key: infra
-    operator: Exists
-  - effect: NoExecute
-    key: infra
-    operator: Exists
+apiVersion: policy.open-cluster-management.io/v1
+kind: ConfigurationPolicy
+metadata:
+  name: cluster-monitoring-config
+spec:
+  remediationAction: enforce
+  severity: low
+  object-templates-raw: |
+    {{- $obsNamespace := "open-cluster-management-addon-observability" }}
+    {{- if eq (fromClusterClaim "name") "local-cluster" }}
+      {{- $obsNamespace = "open-cluster-management-observability" }}
+    {{- end }}
+
+    {{/* ##  check if managed cluster is self-hosted or ARO/ROSA ## */}}
+    {{- $isSelfHosted := (not (eq (fromClusterClaim "product.open-cluster-management.io") "ARO" "ROSA")) }}
+    - complianceType: musthave
+      objectDefinition:
+    {{/* ##  set the nodeSelector and toleration if infra nodes exist.    ## */}}
+    {{/* ##  tolerations are passed to mustFromJson to validate input  ## */}}
+    {{- $nodeSelector := "node-role.kubernetes.io/worker" }}
+    {{- $nodeTolerations := mustFromJson "[]" }}
+
+    {{- if (hasNodesWithExactRoles "infra") }}
+      {{- $nodeSelector = "node-role.kubernetes.io/infra" }}
+      {{- $nodeTolerations = mustFromJson "[{\"operator\":\"Exists\",\"key\":\"node-role.kubernetes.io/infra\"}]" }}
+    {{- end }}
+
+        apiVersion: v1
+        kind: ConfigMap
+        metadata:
+          name: cluster-monitoring-config
+          namespace: openshift-monitoring
+        data:
+          config.yaml: |
+            alertmanagerMain:
+              enableUserAlertmanagerConfig: true
+              nodeSelector:
+                {{ $nodeSelector }}: ""
+              tolerations: '{{ $nodeTolerations | toRawJson | toLiteral }}'
+
+            enableUserWorkload: true
+
+            nodeExporter:
+              collectors:
+                buddyinfo: {}
+                cpufreq: {}
+                ksmd: {}
+                mountstats: {}
+                netclass: {}
+                netdev: {}
+                processes: {}
+                systemd: {}
+                tcpstat: {}
+
+
+            prometheusK8s:
+              nodeSelector:
+                {{ $nodeSelector }}: ""
+              tolerations: '{{ $nodeTolerations | toRawJson | toLiteral }}'
+
+    {{- $obsHubInfoSecret := (lookup "v1" "Secret" $obsNamespace "hub-info-secret") }}
+    {{- if not (empty $obsHubInfoSecret ) }}
+      {{- $hubInfo := (index $obsHubInfoSecret.data "hub-info.yaml") | base64dec }}
+      {{- $amURL := "" }}
+      {{- range $v := (split "\n" $hubInfo)}}
+        {{- if (contains "alertmanager-endpoint" $v) }}
+          {{- $amURL = (split " " $v)._1 }}
+          {{- break }}
+        {{- end }}
+      {{- end }}
+              additionalAlertmanagerConfigs:
+              - apiVersion: v2
+                bearerToken:
+                  key: token
+                  name: observability-alertmanager-accessor
+                scheme: https
+                staticConfigs:
+                - {{ trimAll "https://" $amURL }}
+                tlsConfig:
+                  ca:
+                    key: service-ca.crt
+                    name: hub-alertmanager-router-ca
+                  insecureSkipVerify: false
+    {{- end }}
+              externalLabels:
+                customalertlabel: "on"
+                instance_name: {{ $n := split "." (lookup "config.openshift.io/v1" "Infrastructure" "" "cluster").status.apiServerURL }}{{ $n._1 }}
+                managed_cluster: {{ fromClusterClaim "id.openshift.io" }}
+                product: {{ fromClusterClaim "product.open-cluster-management.io" }}
+              resources:
+                requests:
+                  cpu: 200m
+                  memory: 2Gi
+            {{- if $isSelfHosted }}
+              retention: 24h
+            {{- end }}
+              nodeSelector:
+                {{ $nodeSelector }}: ""
+              tolerations: '{{ $nodeTolerations | toRawJson | toLiteral }}'
+             
+    {{/* ##  group all remaining components together since the only config is for infra nodes  ## */}}
+            prometheusOperator:
+              nodeSelector:
+                {{ $nodeSelector }}: ""
+              tolerations: '{{ $nodeTolerations | toRawJson | toLiteral }}'
+
+            kubeStateMetrics:
+              nodeSelector:
+                {{ $nodeSelector }}: ""
+              tolerations: '{{ $nodeTolerations | toRawJson | toLiteral }}'
+
+            openshiftStateMetrics:
+              nodeSelector:
+                {{ $nodeSelector }}: ""
+              tolerations: '{{ $nodeTolerations | toRawJson | toLiteral }}'
+
+            grafana:
+              nodeSelector:
+                {{ $nodeSelector }}: ""
+              tolerations: '{{ $nodeTolerations | toRawJson | toLiteral }}'
+
+            telemeterClient:
+              nodeSelector:
+                {{ $nodeSelector }}: ""
+              tolerations: '{{ $nodeTolerations | toRawJson | toLiteral }}'
+
+            thanosQuerier:
+              nodeSelector:
+                {{ $nodeSelector }}: ""
+              tolerations: '{{ $nodeTolerations | toRawJson | toLiteral }}'
