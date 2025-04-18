@@ -9,5 +9,5 @@ spec:
   subscription:
     name: local-storage-operator
   operatorGroup:
-    namespace: openshift-local-storage
+    targetNamespaces: openshift-local-storage
   upgradeApproval: Automatic
