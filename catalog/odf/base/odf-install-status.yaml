@@ -1,7 +1,7 @@
 apiVersion: policy.open-cluster-management.io/v1
 kind: ConfigurationPolicy
 metadata:
- name: gitops-operator-status
+ name: odf-operator-status
 spec:
  remediationAction: InformOnly
  severity: high
