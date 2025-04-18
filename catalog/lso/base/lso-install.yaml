@@ -8,5 +8,6 @@ spec:
   complianceType: musthave
   subscription:
     name: local-storage-operator
+  operatorGroup:
     namespace: openshift-local-storage
   upgradeApproval: Automatic
