@@ -7,7 +7,7 @@ spec:
  severity: high
  object-templates-raw: |
   {{/* ## Get the subscription we are checking health for ## */}}
-  {{- $op_namespace := "openshift--storage" }}
+  {{- $op_namespace := "openshift-storage" }}
   {{- $op_subName := "odf-operator"}}
    
   {{/* ## Ensure the Subscription is at latest known release status ## */}}
