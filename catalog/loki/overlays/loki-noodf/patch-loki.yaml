@@ -1,0 +1,3 @@
+- op: replace
+  path: '/spec/storage/tls/caName'
+  value: loki-s3-ca

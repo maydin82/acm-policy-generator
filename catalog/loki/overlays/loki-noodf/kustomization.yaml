@@ -2,8 +2,13 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - ../../base
+  - loki-secret.yaml
 patches:
   - path: ./patch-logging-subs.yaml
     target:
-      name: cluster-logging
+      name: loki-operator
       kind: Subscription
+  - path: ./patch-loki.yaml
+    target:
+      name: logging-loki
+      kind: LokiStack

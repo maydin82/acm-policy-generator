@@ -4,4 +4,5 @@ resources:
   - logging-ns.yaml
   - logging-og.yaml
   - logging-subs.yaml
+  - logging-sa-roles.yaml
 

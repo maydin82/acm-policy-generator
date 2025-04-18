@@ -1,0 +1,9 @@
+- op: replace
+  path: '/spec/storage/tls/caName'
+  value: openshift-service-ca.crt
+- op: add
+  path: '/spec/storage/tls/caKey'
+  value: service-ca.crt
+- op: replace
+  path: '/spec/storageClassName'
+  value: ocs-storagecluster-ceph-rbd

@@ -1,0 +1,44 @@
+apiVersion: observability.openshift.io/v1
+kind: ClusterLogForwarder
+metadata:
+  name: collector
+  namespace: openshift-logging
+spec:
+  collector:
+    tolerations:
+      - operator: "Exists"
+  serviceAccount:
+    name: logging-collector
+  filters:
+  - name: importantinfra
+    type: drop
+    drop:
+    - test:
+      - field: .level
+        matches: "warn|warning|info|inf|information|notice"
+      - field: .log_type
+        matches: infrastructure
+  outputs:
+  - name: loki
+    type: lokiStack
+    lokiStack:
+      target:
+        name: logging-loki
+        namespace: openshift-logging
+      authentication:
+        token:
+          from: serviceAccount
+    tls:
+      ca:
+        key: service-ca.crt
+        configMapName: openshift-service-ca.crt
+  pipelines:
+  - name: default-internal
+    filterRefs:
+    - importantinfra
+    inputRefs:
+    - application
+    - infrastructure
+    - audit
+    outputRefs:
+    - loki
