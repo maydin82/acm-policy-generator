@@ -27,6 +27,13 @@ policies:
   policySets:
     - policyset-hub-catalog
 
+- name: odf-hub
+  disabled: false
+  manifests:
+    - path: ./odf/overlays/noobaa-only/hub
+  policySets:
+    - policyset-hub-catalog
+
 policySets:
   - description: Catalog policies  applied to hub cluster
     name: policyset-hub-catalog
