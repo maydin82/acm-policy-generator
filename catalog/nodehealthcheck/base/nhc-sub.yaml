@@ -2,10 +2,10 @@ apiVersion: operators.coreos.com/v1alpha1
 kind: Subscription
 metadata:
   name: node-healthcheck-operator
-  namespace: openshift-operators
+  namespace: openshift-workload-availability
 spec:
   channel: stable
-  installPlanApproval: Automatic
+  installPlanApproval: Manual
   name: node-healthcheck-operator
   source: redhat-operators
   sourceNamespace: openshift-marketplace
