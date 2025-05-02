@@ -6,4 +6,4 @@ generators:
 - policyGenerator-clusterconfig-all.yaml
 #- policyGenerator-clusterconfig-hub.yaml
 #- policyGenerator-clusterconfig-preprod.yaml
-#- policyGenerator-clusterconfig-prod.yaml
+- policyGenerator-clusterconfig-prod.yaml

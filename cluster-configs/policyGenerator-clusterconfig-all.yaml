@@ -30,7 +30,7 @@ policies:
 
 
 - name: enable-etcd-encryption
-  disabled: true
+  disabled: false
   manifests:
     - path: ./etcd-encrypt/overlays/default
 

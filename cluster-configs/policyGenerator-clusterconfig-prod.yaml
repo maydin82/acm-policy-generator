@@ -21,74 +21,25 @@ policyDefaults:
 
 policies:
 
+- name: conf-roles-all
+  manifests:
+    - path: ./roles/overlays/default
       
 #### Prod Cluster Policy Start ####
 
-- name: internal-regobc-prod
-  manifests:
-    - path: internal-reg/overlays/noobaa/prod/internalreg-object-storage.yaml
+#- name: internal-regobc-prod
+#  manifests:
+#    - path: internal-reg/overlays/noobaa/prod/internalreg-object-storage.yaml
 
-- name: conf-internalregistry-prod
-  manifests:
-    - path: ./internal-reg/overlays/noobaa/prod/
-  dependencies:
-    - name: "internal-regobc-prod"
-      namespace: "acm-policies"
-      compliance: "Compliant"
-      kind: "Policy"
-      apiVersion: "policy.open-cluster-management.io/v1"
-
-
-- name: conf-ldap-prod
-  manifests:
-    - path: ./ldap/overlays/prod
-
-- name: conf-ldapgroupsync-prod
-  manifests:
-    - path: ./ldap-group-sync/overlays/hub
-
-- name: conf-chronyd-prod
-  manifests:
-    - path: ./chronyd/overlays/hub
-
-- name: conf-proxy-prod
-  manifests:
-    - path: ./proxy-cluster/overlays/prod
-
-
-
-- name: conf-kubelet-prod
-  manifests:
-    - path: ./kubelet/overlays/prod
-
-
-- name: conf-monitoring-prod
-  manifests:
-    - path: ./monitoring/overlays/prod
-
-- name: conf-userworkloadmonitoring-prod
-  manifests:
-    - path: ./userworkload-monitoring/overlays/prod
-
-- name: conf-ethtool-buffer-prod
-  manifests:
-    - path: ./ethtool-buffer/overlays/prod
-
-- name: conf-tuned-prod
-  manifests:
-    - path: ./tuned/overlays/prod
-
-- name: conf-dmz-sharding-prod
-  manifests:
-    - path: dmz-sharding/overlays/prod
-
-- name: conf-restrict-imagereg-prod
-  manifests:
-    - path: restrict-imagereg/overlays/prod
-
-- name: conf-ingress-default-prod
-  manifests:
-    - path: ./ingress/overlays/prod
+#- name: conf-internalregistry-prod
+#  manifests:
+#    - path: ./internal-reg/overlays/noobaa/prod/
+#  dependencies:
+#    - name: "internal-regobc-prod"
+#      namespace: "acm-policies"
+#      compliance: "Compliant"
+#      kind: "Policy"
+#      apiVersion: "policy.open-cluster-management.io/v1"
 
 
 #### Prod Cluster Policy End ####
