@@ -3,8 +3,8 @@ kind: Kustomization
 resources:
   - ../../../base
   - ocs-storagecluster-noobaa-only.yaml
-  - backingstore.yaml
-  - bucketclass.yaml
+#  - backingstore.yaml
+#  - bucketclass.yaml
 patches:
   - path: ./odf-sub-patch.yaml
     target:
