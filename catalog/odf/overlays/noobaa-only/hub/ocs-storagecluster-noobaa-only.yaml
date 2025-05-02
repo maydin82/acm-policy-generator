@@ -5,6 +5,7 @@ metadata:
   namespace: openshift-storage
 spec:
   multiCloudGateway:
-    dbStorageClassName: thin
+    dbStorageClassName: gp3-csi
     reconcileStrategy: standalone
+
 
