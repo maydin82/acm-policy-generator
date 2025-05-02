@@ -3,3 +3,4 @@ kind: Kustomization
 resources:
   - ./placement-hub.yaml
   - ./placement-all.yaml
+  - ./placement-prod.yaml
