@@ -24,9 +24,9 @@ policies:
 ####  Cluster Policy Start For All Clusters ####
 
 
-- name: conf-roles-all
-  manifests:
-    - path: ./roles/overlays/default
+#- name: conf-roles-all
+#  manifests:
+#    - path: ./roles/overlays/default
 
 
 - name: enable-etcd-encryption
@@ -34,18 +34,18 @@ policies:
     - path: ./etcd-encrypt/overlays/default
 
 
-- name: timezone-cluster-conf
-  manifests:
-    - path: ./timezone/overlays/default
+#- name: timezone-cluster-conf
+#  manifests:
+#    - path: ./timezone/overlays/default
 
-- name: etcdbackup-cluster-conf
-  complianceType: "musthave"
-  manifests:
-    - path: etcd-backup/overlays/default
+#- name: etcdbackup-cluster-conf
+#  complianceType: "musthave"
+#  manifests:
+#    - path: etcd-backup/overlays/default
 
-- name: dns-cluster-conf
-  manifests:
-    - path: dns/overlays/default
+#- name: dns-cluster-conf
+#  manifests:
+#    - path: dns/overlays/default
 
 ####  Cluster Policy Ends For All Clusters ####
 
