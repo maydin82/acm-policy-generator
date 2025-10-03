@@ -1,0 +1,226 @@
+apiVersion: policy.open-cluster-management.io/v1
+kind: PolicyGenerator
+metadata:
+  name: policy-catalog-generator
+placementBindingDefaults:
+  name: catalog-config-binding 
+policyDefaults:
+  categories:
+    - CM Configuration Management
+  controls: 
+    - CM-2 Baseline Configuration
+  namespace: acm-policies
+  metadataComplianceType: "musthave"
+  complianceType: "mustonlyhave"
+  remediationAction: enforce
+  severity: medium
+  standards:
+    - NIST SP 800-53
+policies:
+
+
+
+#### LOGGING START ####
+      
+- name: logging-hub
+  manifests:
+    - path: ./logging/overlays/hub
+  policySets:
+    - policyset-hub-catalog
+
+- name: logging-prod
+  manifests:
+    - path: ./logging/overlays/prod
+  policySets:
+    - policyset-prod-catalog
+
+- name: logging-preprod
+  manifests:
+    - path: ./logging/overlays/preprod
+  policySets:
+    - policyset-preprod-catalog
+
+#### LOGGING END ####
+
+
+#### ODF POLICIES START ####
+
+
+- name: odf-hub
+  disabled: false
+  manifests:
+    - path: ./odf/overlays/noobaa-only/hub
+  policySets:
+    - policyset-hub-catalog
+
+- name: odf-prod
+  manifests:
+    - path: ./odf/overlays/lso/prod
+  policySets:
+    - policyset-prod-catalog
+
+- name: odf-preprod
+  manifests:
+    - path: ./odf/overlays//thin/preprod
+  policySets:
+    - policyset-preprod-catalog
+
+- name: lso-prod
+  manifests:
+    - path: ./lso/overlays/prod
+  policySets:
+    - policyset-prod-catalog
+
+
+- name: odfconsole
+  complianceType: "musthave"
+  manifests:
+    - path: ./odf/base/odf-console.yaml
+  policySets:
+    - policyset-hub-catalog
+    - policyset-prod-catalog
+    - policyset-preprod-catalog
+
+
+
+#### ODF POLICIES END ####
+
+- name: quay-hub 
+  disabled: false
+  manifests:
+    - path: ./quay/overlays/hub
+  policySets:
+    - policyset-hub-catalog
+
+
+- name: compliance-prod-catalog 
+  manifests:
+    - path: ./ocp-compliance/overlays/default
+  policySets:
+    - policyset-all-catalog
+
+- name: acm-observability
+  disabled: false
+  manifests:
+    - path: ./acm-observability/overlays/hub
+  complianceType: "musthave"
+  policySets:
+    - policyset-hub-catalog
+
+
+# ACS Policies - start
+- name: acs-central-hub
+  manifests:
+    - path: ./acs-central/overlays/hub
+  policySets:
+    - policyset-hub-catalog
+
+- name: policy-acs-central-status
+  manifests:
+    - path: acs-central/base/policy-acs-central-status.yaml
+  remediationAction: inform
+  complianceType: "musthave"
+  policySets:
+    - policyset-hub-catalog
+    
+- name: policy-acs-central-ca-bundle
+  complianceType: "musthave"
+  manifests:
+    - path: acs-sensor/base/policy-acs-central-ca-bundle.yaml
+  dependencies:
+    - name: "policy-acs-central-status"
+      namespace: "acm-policies"
+      compliance: "Compliant"
+      kind: "Policy"
+      apiVersion: "policy.open-cluster-management.io/v1"
+  policySets:
+    - policyset-hub-catalog
+
+
+- name: policy-acs-sync-resources
+  manifests:
+    - path: acs-sensor/base/policy-acs-sync-resources.yaml
+  dependencies:
+    - name: "policy-acs-central-ca-bundle"
+      namespace: "acm-policies"
+      compliance: "Compliant"
+      kind: "Policy"
+      apiVersion: "policy.open-cluster-management.io/v1"
+  policySets:
+    - policyset-hub-catalog
+
+
+- name: managed-cluster
+  consolidateManifests: false
+  manifests:
+    - path: acs-sensor/base/policy-advanced-managed-cluster-security.yaml
+  policySets:
+    - policyset-all-catalog
+# ACS Policies - end
+
+
+
+# Baremetal node remediation -start
+
+- name: nodehealthcheck-prod
+  manifests:
+    - path: nodehealthcheck/overlays/prod
+  policySets:
+    - policyset-prod-catalog
+  dependencies:
+    - name: "selfnoderemediation-prod"
+      namespace: "acm-policies"
+      compliance: "Compliant"
+      kind: "Policy"
+      apiVersion: "policy.open-cluster-management.io/v1"
+
+- name: selfnoderemediation-prod
+  manifests:
+    - path: self-node-remediation/overlays/prod
+  policySets:
+    - policyset-prod-catalog
+
+
+# Baremetal node remediation -end
+
+#  OCP Virtualization - start
+- name: cnv-prod
+  complianceType: "musthave"
+  manifests:
+    - path: cnv/overlays/prod
+  policySets:
+    - policyset-prod-catalog
+
+- name: nmstate-prod
+  manifests:
+    - path: nmstate/overlays/prod
+  policySets:
+    - policyset-prod-catalog
+#  OCP Virtualization - end
+
+- name: mtc
+  manifests:
+    - path: mtc/overlays/default
+  policySets:
+    - policyset-prod-catalog
+    - policyset-preprod-catalog
+
+policySets:
+  - description: Catalog policies  applied to hub cluster
+    name: policyset-hub-catalog
+    placement:
+      placementName: placement-hub
+
+  - description: Catalog policies  applied to prod cluster
+    name: policyset-prod-catalog
+    placement:
+      placementName: placement-prod
+  - description: Catalog policies  applied to all clusters
+    name: policyset-all-catalog
+    placement:
+      placementName: placement-all
+
+  - description: Catalog policies  applied to preprod cluster
+    name: policyset-preprod-catalog
+    placement:
+      placementName: placement-preprod

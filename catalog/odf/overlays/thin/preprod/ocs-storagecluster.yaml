@@ -1,0 +1,21 @@
+apiVersion: ocs.openshift.io/v1
+kind: StorageCluster
+metadata:
+  name: ocs-storagecluster
+  namespace: openshift-storage
+spec:
+  flexibleScaling: true
+  storageDeviceSets:
+  - count: 1  # <-- Modify count to desired value. For each set of 3 disks increment the count by 1.
+    dataPVCTemplate:
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: "2Ti"
+        storageClassName: thin
+        volumeMode: Block
+    name: ocs-deviceset
+    portable: true
+    replica: 1  # <-- dont touch this  

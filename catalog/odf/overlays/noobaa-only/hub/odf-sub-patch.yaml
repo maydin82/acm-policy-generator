@@ -1,0 +1,8 @@
+[
+  {"op": "replace",
+   "path": "/spec/channel",
+   "value": "stable-4.12"},
+  {"op": "replace",
+   "path": "/spec/installPlanApproval",
+   "value": "Automatic"}
+]

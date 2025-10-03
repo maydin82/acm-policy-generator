@@ -1,0 +1,3 @@
+resources:
+  - ../../base
+  - user-ca-bundle.yaml

@@ -1,0 +1,14 @@
+apiVersion: noobaa.io/v1alpha1
+kind: BackingStore
+metadata:
+  name: noobaa-nondef-backing-store
+  namespace: openshift-storage
+spec:
+  pvPool:
+    numVolumes: 1
+    resources:
+      requests:
+        storage: 300Gi
+    secret: {}
+    storageClass: thin-csi
+  type: pv-pool

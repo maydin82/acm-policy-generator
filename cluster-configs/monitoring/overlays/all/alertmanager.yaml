@@ -1,0 +1,81 @@
+apiVersion: policy.open-cluster-management.io/v1
+kind: ConfigurationPolicy
+metadata:
+  name: alertmanager
+spec:
+  remediationAction: enforce
+  severity: low
+  object-templates-raw: |
+
+    {{/* read the password */}}
+    {{hub $smtpsecret := lookup "v1" "Secret" "acm-policies" "generic-secret" hub}}
+
+    {{/* create the alertmanager config file as a template */}}
+    {{hub $alertConfig := `
+     global:
+       resolve_timeout: 5m
+     inhibit_rules:
+       - equal:
+           - namespace
+           - alertname
+         source_matchers:
+           - severity = critical
+         target_matchers:
+           - severity =~ warning|info
+       - equal:
+           - namespace
+           - alertname
+         source_matchers:
+           - severity = warning
+         target_matchers:
+           - severity = info
+       - equal:
+            - namespace
+         source_matchers:
+           - alertname = InfoInhibitor
+         target_matchers:
+           - severity = info
+     receivers:
+       - name: Default
+         email_configs:
+           - to: todo@example.com.tr
+             from: todo@example.com.tr
+             smarthost: 'todo:25'
+             auth_username: todo
+             auth_password: %[1]s
+             require_tls: false
+       - name: Watchdog
+       - name: Critical
+       - name: 'null'
+     route:
+       group_by:
+         - namespace
+       group_interval: 5m
+       group_wait: 30s
+       receiver: Default
+       repeat_interval: 12h
+       routes:
+         - matchers:
+             - alertname = Watchdog
+           receiver: Watchdog
+         - matchers:
+             - alertname = InfoInhibitor
+           receiver: 'null'
+         - matchers:
+             - severity = critical
+           receiver: Critical
+    ` hub}}
+
+    {{/* create the secret using the template */}}
+
+    - complianceType: mustonlyhave
+      objectDefinition:
+        apiVersion: v1
+        kind: Secret
+        metadata:
+          name: alertmanager-main
+          namespace: openshift-monitoring
+        type: Opaque
+        data:
+          alertmanager.yaml: |-
+              {{hub (printf $alertConfig ($smtpsecret.data.smtpPassword|base64dec)) | base64enc hub}}

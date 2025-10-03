@@ -1,0 +1,9 @@
+apiVersion: v1
+data:
+  ingressdefaultcount: "1"
+  monitoring-sc: ocs-external-storagecluster-ceph-rbd
+immutable: false
+kind: ConfigMap
+metadata:
+  name: local-cluster
+  namespace: acm-policies

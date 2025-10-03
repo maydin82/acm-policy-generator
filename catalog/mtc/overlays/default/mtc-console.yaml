@@ -1,0 +1,11 @@
+apiVersion: console.openshift.io/v1
+kind: ConsoleLink
+metadata:
+  name: mtc
+spec:
+  applicationMenu:
+    section: Red Hat Applications
+    imageURL: 'https://upload.wikimedia.org/wikipedia/commons/3/3a/OpenShift-LogoType.svg'
+  href: https://{{ (lookup "route.openshift.io/v1" "Route" "openshift-migration" "migration").spec.host }}
+  location: ApplicationMenu
+  text: 'Red Hat Migration Toolkit For Containers'

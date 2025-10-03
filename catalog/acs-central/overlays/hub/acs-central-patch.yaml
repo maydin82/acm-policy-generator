@@ -1,0 +1,13 @@
+- op: add
+  path: '/spec/central/nodeSelector'
+  value:
+    node-role.kubernetes.io/acs: ""
+- op: add
+  path: '/spec/scanner/db'
+  value: 
+    nodeSelector:
+      node-role.kubernetes.io/acs: ""
+- op: add
+  path: '/spec/scanner/analyzer/nodeSelector'
+  value:
+    node-role.kubernetes.io/acs: ""

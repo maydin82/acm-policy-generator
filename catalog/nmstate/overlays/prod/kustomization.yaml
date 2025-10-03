@@ -1,0 +1,3 @@
+resources:
+  - nncp-hpbm-bondvm.yaml
+  - ../../base

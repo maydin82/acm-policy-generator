@@ -1,0 +1,44 @@
+apiVersion: loki.grafana.com/v1
+kind: LokiStack
+metadata:
+  name: logging-loki
+  namespace: openshift-logging
+spec:
+  rules:
+    enabled: true
+    selector:
+      matchLabels:
+        openshift.io/cluster-monitoring: "true"
+    namespaceSelector:
+      matchLabels:
+        openshift.io/cluster-monitoring: "true"
+  size: 1x.small
+  storage:
+    tls:
+      caName: changeme
+    schemas:
+    - version: v13
+      effectiveDate: "2025-04-09"
+    secret:
+      name: logging-loki-s3
+      type: s3
+  limits:
+    global:
+      ingestion:
+        ingestionBurstSize: 16
+        ingestionRate: 8
+      retention:
+        days: 7
+    tenants:
+      application:
+        retention:
+          days: 7
+      audit:
+        retention:
+          days: 1
+      infrastructure:
+        retention:
+          days: 3
+  storageClassName: changeme
+  tenants:
+    mode: openshift-logging

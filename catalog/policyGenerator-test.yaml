@@ -1,0 +1,62 @@
+apiVersion: policy.open-cluster-management.io/v1
+kind: PolicyGenerator
+metadata:
+  name: policy-catalog-generator
+placementBindingDefaults:
+  name: catalog-config-binding 
+policyDefaults:
+  categories:
+    - CM Configuration Management
+  controls: 
+    - CM-2 Baseline Configuration
+  namespace: acm-policies
+  metadataComplianceType: "musthave"
+  complianceType: "mustonlyhave"
+  remediationAction: enforce
+  severity: medium
+  standards:
+    - NIST SP 800-53
+policies:
+
+
+
+- name: acm-observability
+  disabled: false
+  manifests:
+    - path: ./acm-observability/overlays/hub
+  complianceType: "musthave"
+  policySets:
+    - policyset-hub-catalog
+
+#- name: lso-prod
+#  manifests:
+#    - path: ./lso/overlays/prod
+#  policySets:
+#    - policyset-hub-catalog
+
+#- name: odf-hub
+#  disabled: false
+#  manifests:
+#    - path: ./odf/overlays/noobaa-only/hub
+#  policySets:
+#    - policyset-prod-catalog
+
+policySets:
+  - description: Catalog policies  applied to hub cluster
+    name: policyset-hub-catalog
+    placement:
+      placementName: placement-hub
+
+  - description: Catalog policies  applied to prod cluster
+    name: policyset-prod-catalog
+    placement:
+      placementName: placement-prod
+  - description: Catalog policies  applied to all clusters
+    name: policyset-all-catalog
+    placement:
+      placementName: placement-all
+
+  - description: Catalog policies  applied to preprod cluster
+    name: policyset-preprod-catalog
+    placement:
+      placementName: placement-preprod

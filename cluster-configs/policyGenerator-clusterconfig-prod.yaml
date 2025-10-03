@@ -1,0 +1,54 @@
+apiVersion: policy.open-cluster-management.io/v1
+kind: PolicyGenerator
+metadata:
+  name: policy-core-generator-prod
+placementBindingDefaults:
+  name: cluster-config-binding-prod 
+policyDefaults:
+  categories:
+    - CM Configuration Management
+  controls: 
+    - CM-2 Baseline Configuration
+  namespace: acm-policies
+  metadataComplianceType: "musthave"
+  complianceType: "mustonlyhave"
+  remediationAction: enforce
+  severity: medium
+  policySets:
+    - policyset-prod-clusterconfig
+  standards:
+    - NIST SP 800-53
+
+policies:
+
+- name: conf-roles-all
+  manifests:
+    - path: ./roles/overlays/default
+      
+#### Prod Cluster Policy Start ####
+
+#- name: internal-regobc-prod
+#  manifests:
+#    - path: internal-reg/overlays/noobaa/prod/internalreg-object-storage.yaml
+
+#- name: conf-internalregistry-prod
+#  manifests:
+#    - path: ./internal-reg/overlays/noobaa/prod/
+#  dependencies:
+#    - name: "internal-regobc-prod"
+#      namespace: "acm-policies"
+#      compliance: "Compliant"
+#      kind: "Policy"
+#      apiVersion: "policy.open-cluster-management.io/v1"
+
+
+#### Prod Cluster Policy End ####
+
+
+policySets:
+
+  - description: Policy set for the policies which are going to be deployed into Prod cluster only
+    name: policyset-prod-clusterconfig
+    placement:
+      placementName: placement-prod
+

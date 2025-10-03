@@ -1,0 +1,4 @@
+- op: replace
+  path: '/spec/placementPolicy/tiers/0/backingStores/0'
+  value: noobaa-default-backing-store
+

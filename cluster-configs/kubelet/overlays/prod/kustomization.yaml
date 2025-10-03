@@ -1,0 +1,8 @@
+resources:
+  - ../../base
+
+patches:
+  - path: ./kubelet-patch.yaml
+    target:
+      kind: KubeletConfig
+

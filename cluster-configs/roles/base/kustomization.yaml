@@ -1,0 +1,3 @@
+resources:
+  - clusteradmin.yaml
+  - remove-self-prov.yaml  
