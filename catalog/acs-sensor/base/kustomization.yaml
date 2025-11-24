@@ -1,0 +1,5 @@
+resources: 
+  - policy-acs-central-ca-bundle.yaml
+  - policy-acs-sync-resources.yaml
+  - policy-advanced-managed-cluster-security.yaml
+  - policy-advanced-managed-cluster-status.yaml

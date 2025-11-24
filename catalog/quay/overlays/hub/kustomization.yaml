@@ -1,0 +1,9 @@
+resources: 
+  - ../../base
+patches:
+  - path: ./quay-sub-patch.yaml
+    target: 
+      kind: Subscription  
+  - path: ./quay-secret-patch.yaml
+    target: 
+      kind: Secret  

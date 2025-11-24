@@ -1,0 +1,10 @@
+resources:
+  - ../../../base
+  - ./ocs-storagecluster.yaml
+  - ./rook-ceph-operator-config.yaml  
+  - change-default-sc.yaml
+  - ceph-tools.yaml
+patches:
+  - path: ./odf-sub-patch.yaml
+    target:
+      kind: Subscription

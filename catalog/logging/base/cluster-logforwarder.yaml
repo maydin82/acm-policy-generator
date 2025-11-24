@@ -1,0 +1,28 @@
+---
+apiVersion: observability.openshift.io/v1
+kind: ClusterLogForwarder
+metadata:
+  name: auditlog
+  namespace: openshift-logging
+spec:
+  collector:
+    tolerations:
+      - operator: "Exists"
+  outputs:
+    - name: qradar-syslog
+      type: syslog
+      syslog:
+        facility: local0
+        severity: notice
+        rfc: RFC5424
+        payloadKey: "{.message}"
+        url: changeme
+  pipelines:
+    - name: audit-to-qradar
+      inputRefs:
+        - audit
+      outputRefs:
+        - qradar-syslog
+  serviceAccount:
+    name: logging-collector
+

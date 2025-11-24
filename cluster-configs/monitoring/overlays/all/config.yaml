@@ -1,0 +1,114 @@
+apiVersion: policy.open-cluster-management.io/v1
+kind: ConfigurationPolicy
+metadata:
+  name: cluster-monitoring-config
+spec:
+  remediationAction: enforce
+  severity: low
+  object-templates-raw: |
+    {{- $obsHubInfoSecret := (lookup "v1" "Secret" (eq (fromClusterClaim "name") "local-cluster" | ternary "open-cluster-management-observability" "open-cluster-management-addon-observability") "hub-info-secret") }}
+    - complianceType: musthave
+      objectDefinition:
+    {{- $nodeSelector := "node-role.kubernetes.io/infra" }}
+    {{- $nodeTolerations := mustFromJson "[{\"operator\":\"Exists\",\"key\":\"node-role.kubernetes.io/infra\"}]" }}
+
+
+        apiVersion: v1
+        kind: ConfigMap
+        metadata:
+          name: cluster-monitoring-config
+          namespace: openshift-monitoring
+        data:
+          config.yaml: |
+            alertmanagerMain:
+              enableUserAlertmanagerConfig: true
+              nodeSelector:
+                {{ $nodeSelector }}: ""
+              tolerations: '{{ $nodeTolerations | toRawJson | toLiteral }}'
+            enableUserWorkload: true
+
+            nodeExporter:
+              collectors:
+                buddyinfo: {}
+                cpufreq: {}
+                ksmd: {}
+                mountstats: {}
+                netclass: {}
+                netdev: {}
+                processes: {}
+                systemd: {}
+                tcpstat: {}
+
+
+            prometheusK8s:
+              nodeSelector:
+                {{ $nodeSelector }}: ""
+              tolerations: '{{ $nodeTolerations | toRawJson | toLiteral }}'
+              volumeClaimTemplate:
+                spec:
+                  storageClassName: '{{hub (fromConfigMap "acm-policies" .ManagedClusterName "monitoring-sc") hub}}'
+                  resources:
+                    requests:
+                      storage: 5Gi
+    {{- if not (empty $obsHubInfoSecret ) }}
+      {{- $hubInfo := (index $obsHubInfoSecret.data "hub-info.yaml") | base64dec }}
+      {{- $amURL := "" }}
+      {{- range $v := (split "\n" $hubInfo)}}
+        {{- if (contains "alertmanager-endpoint" $v) }}
+          {{- $amURL = (split " " $v)._1 }}
+          {{- break }}
+        {{- end }}
+      {{- end }}
+              additionalAlertmanagerConfigs:
+              - apiVersion: v2
+                bearerToken:
+                  key: token
+                  name: observability-alertmanager-accessor
+                scheme: https
+                staticConfigs:
+                - {{ trimAll "https://" $amURL }}
+                tlsConfig:
+                  ca:
+                    key: service-ca.crt
+                    name: hub-alertmanager-router-ca
+                  insecureSkipVerify: false
+    {{- end }}
+              externalLabels:
+                customalertlabel: "on"
+                instance_name: {{ $n := split "." (lookup "config.openshift.io/v1" "Infrastructure" "" "cluster").status.apiServerURL }}{{ $n._1 }}
+                managed_cluster: {{ fromClusterClaim "id.openshift.io" }}
+                product: {{ fromClusterClaim "product.open-cluster-management.io" }}
+              resources:
+                requests:
+                  cpu: 200m
+                  memory: 2Gi
+              retention: 24h
+              retentionSize: 4GB
+
+
+
+    {{/* ##  group all remaining components together since the only config is for infra nodes  ## */}}
+            prometheusOperator:
+              nodeSelector:
+                {{ $nodeSelector }}: ""
+              tolerations: '{{ $nodeTolerations | toRawJson | toLiteral }}'
+
+            kubeStateMetrics:
+              nodeSelector:
+                {{ $nodeSelector }}: ""
+              tolerations: '{{ $nodeTolerations | toRawJson | toLiteral }}'
+
+            openshiftStateMetrics:
+              nodeSelector:
+                {{ $nodeSelector }}: ""
+              tolerations: '{{ $nodeTolerations | toRawJson | toLiteral }}'
+
+            telemeterClient:
+              nodeSelector:
+                {{ $nodeSelector }}: ""
+              tolerations: '{{ $nodeTolerations | toRawJson | toLiteral }}'
+
+            thanosQuerier:
+              nodeSelector:
+                {{ $nodeSelector }}: ""
+              tolerations: '{{ $nodeTolerations | toRawJson | toLiteral }}'

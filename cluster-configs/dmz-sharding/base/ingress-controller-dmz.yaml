@@ -1,0 +1,15 @@
+apiVersion: operator.openshift.io/v1
+kind: IngressController
+metadata:
+  name: changeme
+  namespace: openshift-ingress-operator
+
+spec:
+  httpEmptyRequestsPolicy: Respond
+  domain: changeme
+  defaultCertificate: 
+    name: changeme
+  replicas: changeme
+  namespaceSelector:
+    matchLabels:
+      name: changeme

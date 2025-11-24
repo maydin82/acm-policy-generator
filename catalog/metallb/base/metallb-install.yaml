@@ -1,0 +1,16 @@
+apiVersion: policy.open-cluster-management.io/v1beta1
+kind: OperatorPolicy
+metadata:
+  name: metallb-operator
+spec:
+  remediationAction: enforce
+  severity: medium
+  complianceType: musthave
+  subscription:
+    name: metallb-operator
+    namespace: metallb-system
+  operatorGroup:
+    name: metallb-operator
+    targetNamespaces: []   
+  upgradeApproval: Automatic
+

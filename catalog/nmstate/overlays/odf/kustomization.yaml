@@ -1,0 +1,4 @@
+resources:
+  - nncp-infra-odf-bond.yaml
+  - nncp-worker-odf-bond.yaml
+  - ../../base

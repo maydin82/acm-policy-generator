@@ -1,0 +1,12 @@
+apiVersion: policy.open-cluster-management.io/v1beta1
+kind: OperatorPolicy
+metadata:
+  name: node-healthcheck-operator 
+spec:
+  remediationAction: enforce
+  severity: medium
+  complianceType: musthave
+  subscription:
+    name: node-healthcheck-operator
+    namespace: openshift-workload-availability
+  upgradeApproval: Automatic

@@ -1,0 +1,4 @@
+resources:
+  - ../../base
+  - group-sync-instance.yaml  
+  - ldap-group-sync-secret.yaml

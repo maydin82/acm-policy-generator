@@ -1,0 +1,9 @@
+[
+  {"op": "replace",
+   "path": "/spec/identityProviders/0/ldap/bindDN",
+   "value": "CN=,OU=,OU=,DC=,DC=,DC="},
+  {"op": "replace",
+   "path": "/spec/identityProviders/0/ldap/url",
+   "value": "ldaps:///OU=,OU=,OU=,DC=,DC=,DC=?"}
+
+]

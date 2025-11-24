@@ -1,0 +1,85 @@
+apiVersion: hypershift.openshift.io/v1beta1
+kind: HostedCluster
+metadata:
+  name: changme
+  namespace: clusters
+spec:
+  configuration:
+    oauth:
+      identityProviders:
+      - name: ldapad
+        mappingMethod: claim
+        type: LDAP
+        ldap:
+          attributes:
+            id:
+              - dn
+            email:
+              - mail
+            name:
+              - cn
+            preferredUsername:
+              - sAMAccountName
+          bindDN: CN=TODO,OU=TODO,OU=_TODO,DC=TODO,DC=TODO
+          bindPassword:
+            name: ldap-secret
+          insecure: true
+          url: ldap://TODO/dc=TODO,dc=TODO?sAMAccountName
+  controllerAvailabilityPolicy: HighlyAvailable
+  etcd:
+    managed:
+      storage:
+        persistentVolume:
+          size: 8Gi
+          storageClassName: lvms-vg1
+        type: PersistentVolume
+    managementType: Managed
+  fips: false
+  networking:
+    clusterNetwork:
+    - cidr: 10.32.0.0/16
+    networkType: OVNKubernetes
+    serviceNetwork:
+    - cidr: 10.33.0.0/18
+  olmCatalogPlacement: management
+  platform:
+    kubevirt:
+      baseDomainPassthrough: true
+      storageDriver:
+        manual:
+          storageClassMapping:
+          - guestStorageClassName: guest-sc-rbd
+            infraStorageClassName: ocs-storagecluster-ceph-rbd
+          volumeSnapshotClassMapping:
+          - guestVolumeSnapshotClassName: guest-vsc1
+            infraVolumeSnapshotClassName: ocs-storagecluster-rbdplugin-snapclass
+        type: Manual
+    type: KubeVirt
+  pullSecret:
+    name: hcp-pull-secret
+  release:
+    image: changeme
+  secretEncryption:
+    aescbc:
+      activeKey:
+        name: hcp-etcd-encryption-key
+    type: aescbc
+  services:
+  - service: APIServer
+    servicePublishingStrategy:
+      type: LoadBalancer
+  - service: Ignition
+    servicePublishingStrategy:
+      type: Route
+  - service: Konnectivity
+    servicePublishingStrategy:
+      type: Route
+  - service: OAuthServer
+    servicePublishingStrategy:
+      type: Route
+  sshKey: {}
+  tolerations:
+  - effect: NoSchedule
+    key: node.ocs.openshift.io/storage
+    operator: Equal
+    value: "true"

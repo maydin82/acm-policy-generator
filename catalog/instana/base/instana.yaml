@@ -1,0 +1,17 @@
+---
+apiVersion: policy.open-cluster-management.io/v1beta1
+kind: OperatorPolicy
+metadata:
+  name: instana-agent-operator
+spec:
+  remediationAction: enforce
+  severity: medium
+  complianceType: musthave
+  subscription:
+    name: instana-agent-operator
+    namespace: instana-agent
+  operatorGroup:
+    name: instana-agent-operator
+    targetNamespaces: []
+  upgradeApproval: Automatic
+---

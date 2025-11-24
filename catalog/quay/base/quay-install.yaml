@@ -1,0 +1,17 @@
+apiVersion: policy.open-cluster-management.io/v1beta1
+kind: OperatorPolicy
+metadata:
+  name: quay-operator
+spec:
+  remediationAction: enforce
+  severity: medium
+  complianceType: musthave
+  subscription:
+    name: quay-operator
+    namespace: quay-enterprise
+  operatorGroup:
+    name: quay-operator
+    targetNamespaces: 
+      - quay-enterprise   
+  upgradeApproval: Automatic
+

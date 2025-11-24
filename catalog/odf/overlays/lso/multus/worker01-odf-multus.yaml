@@ -1,0 +1,28 @@
+apiVersion: nmstate.io/v1
+kind: NodeNetworkConfigurationPolicy
+metadata:
+  name: ceph-public-net-shim-worker01
+  namespace: openshift-storage
+spec:
+  nodeSelector:
+    kubernetes.io/hostname: worker01.{{hub .ManagedClusterName hub}}.trs.local
+  desiredState:
+    interfaces:
+      - name: odf-pub-shim
+        description: Shim interface used to connect host to OpenShift Data Foundation public Multus network
+        type: mac-vlan
+        state: up
+        mac-vlan:
+          base-iface: br-odf
+          mode: bridge
+          promiscuous: true
+        ipv4:
+          enabled: true
+          dhcp: false
+          address:
+            - ip: 10.34.0.1 # STATIC IP FOR compute-0
+              prefix-length: 24
+    routes:
+      config:
+        - destination: 10.34.1.0/24
+          next-hop-interface: odf-pub-shim

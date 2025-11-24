@@ -1,0 +1,42 @@
+prometheus:
+  retention: 3d
+  volumeClaimTemplate:
+    metadata:
+      name: prometheus-pvc
+    spec:
+      storageClassName: thin
+      resources:
+        requests:
+          storage: 50Gi
+  nodeSelector:
+    node-role.kubernetes.io/infra-generic: ""
+
+  tolerations:
+  - effect: NoSchedule
+    key: infra 
+    operator: Exists
+  - effect: NoExecute
+    key: infra
+    operator: Exists
+prometheusOperator:
+  nodeSelector:
+    node-role.kubernetes.io/infra-generic: ""
+  tolerations:
+  - effect: NoSchedule
+    key: infra
+    operator: Exists
+  - effect: NoExecute
+    key: infra
+    operator: Exists
+
+thanosRuler:
+  nodeSelector:
+    node-role.kubernetes.io/infra-generic: ""
+  tolerations:
+  - effect: NoSchedule
+    key: infra
+    operator: Exists
+  - effect: NoExecute
+    key: infra
+    operator: Exists
+

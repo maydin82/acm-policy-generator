@@ -1,0 +1,19 @@
+---
+apiVersion: nmstate.io/v1
+kind: NodeNetworkConfigurationPolicy
+metadata:
+  name: worker-br-odf
+spec:
+  desiredState:
+    interfaces:
+      - link-aggregation:
+          mode: 802.3ad
+          port:
+            - eno12409np1
+            - ens5f1np1
+        name: br-odf
+        mtu: 9000  
+        state: up
+        type: bond
+  nodeSelector:
+    node-role.kubernetes.io/virtualization: ''

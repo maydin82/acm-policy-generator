@@ -1,0 +1,3 @@
+- op: replace
+  path: '/spec/recommend/0/match/0/label'
+  value: node-role.kubernetes.io/hpbm

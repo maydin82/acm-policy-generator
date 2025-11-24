@@ -1,0 +1,14 @@
+- op: replace
+  path: /metadata/name 
+  value: nodef-custom 
+
+- op: replace
+  path: /spec/release/image
+  value: quay.io/openshift-release-dev/ocp-release:4.19.14-multi
+
+- op: replace
+  path: /spec/dns/baseDomain
+  value: example.com
+
+    
+

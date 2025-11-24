@@ -1,0 +1,4 @@
+resources:
+  - worker-bond-vm.yaml
+  - nad-vlan666.yaml
+  - ../../base

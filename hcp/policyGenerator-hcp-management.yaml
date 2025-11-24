@@ -1,0 +1,62 @@
+apiVersion: policy.open-cluster-management.io/v1
+kind: PolicyGenerator
+metadata:
+  name: policy-core-generator-management-hcp
+placementBindingDefaults:
+  name: cluster-config-binding-management-hcp
+policyDefaults:
+  categories:
+    - CM Configuration Management
+  controls: 
+    - CM-2 Baseline Configuration
+  namespace: acm-policies
+  metadataComplianceType: "musthave"
+  complianceType: "musthave"
+  remediationAction: enforce
+  severity: medium
+  policySets:
+    - policyset-management-hcp
+  standards:
+    - NIST SP 800-53
+  dependencies:
+    - name: "lvm"
+      namespace: "acm-policies" 
+      compliance: "Compliant"
+      kind: "Policy"
+      apiVersion: "policy.open-cluster-management.io/v1"
+              
+
+policies:
+
+####  Cluster Policy Start For All Clusters ####
+
+
+- name: hcp-generic-config
+  disabled: false
+  manifests:
+    - path: ./hcp-generic
+
+- name: hcp-pusula-cluster
+  disabled: false
+  manifests:
+    - path: ./hcp-default/overlays/pusula
+
+- name: hcp-test-ocp-cluster
+  disabled: false
+  manifests:
+    - path: ./hcp-default/overlays/test-ocp
+
+- name: nodef-template-custom-dns 
+  disabled: false
+  manifests:
+    - path: ./hcp-custom/overlays/nodef-template-custom-dns
+
+
+
+
+policySets:
+  - description: Policy set for the policies which are going to be deployed into management clusters
+    name: policyset-management-hcp
+    placement:
+      placementName: placement-management
+

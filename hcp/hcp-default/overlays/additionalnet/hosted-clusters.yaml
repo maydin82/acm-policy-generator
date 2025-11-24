@@ -1,0 +1,8 @@
+- op: replace
+  path: /metadata/name 
+  value: additionalnet
+- op: replace
+  path: /spec/release/image
+  value: quay.io/openshift-release-dev/ocp-release:4.19.14-multi
+
+

@@ -1,0 +1,3 @@
+resources:
+  - master-timezone-ist.yaml
+  - worker-timezone-ist.yaml

@@ -1,0 +1,37 @@
+
+---
+apiVersion: hypershift.openshift.io/v1beta1
+kind: NodePool
+metadata:
+  name: changeme
+  namespace: clusters
+spec:
+  config:
+    - name: hcp-chronyd
+  arch: amd64
+  clusterName: changeme
+  management:
+    autoRepair: true
+    upgradeType: Replace
+  nodeDrainTimeout: 0s
+  nodeVolumeDetachTimeout: 0s
+  platform:
+    kubevirt:
+      attachDefaultNetwork: true
+      compute:
+        cores: changeme
+        memory: changeme
+      networkInterfaceMultiqueue: Enable
+      rootVolume:
+        cacheStrategy:
+          type: PVC
+        persistent:
+          size: 64Gi
+          storageClass: ocs-storagecluster-ceph-rbd
+        type: Persistent
+    type: KubeVirt
+  release:
+    image: changeme
+  replicas: changeme
+---
+

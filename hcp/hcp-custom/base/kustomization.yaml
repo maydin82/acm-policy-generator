@@ -1,0 +1,3 @@
+resources:
+- hosted-cluster-custom.yaml
+- nodepool.yaml

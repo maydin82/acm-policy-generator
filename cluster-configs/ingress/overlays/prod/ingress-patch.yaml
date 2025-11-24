@@ -1,0 +1,17 @@
+- op: replace
+  path: '/spec/replicas'
+  value: 3
+
+- op: add
+  path: '/spec/nodePlacement'
+  value:
+    nodeSelector:
+      matchLabels:
+        node-role.kubernetes.io/router: ""
+    tolerations:
+    - effect: NoSchedule
+      key: router
+      operator: Exists
+    - effect: NoExecute
+      key: router
+      operator: Exists

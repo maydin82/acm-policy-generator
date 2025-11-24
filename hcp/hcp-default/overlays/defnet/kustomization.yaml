@@ -1,0 +1,15 @@
+resources: 
+- ../../base
+patches:
+  - path: hosted-clusters.yaml 
+    target:
+      kind: HostedCluster
+    options:
+      allowNameChange: true
+
+  - path: nodepool.yaml
+    target:
+      kind: NodePool
+    options:
+      allowNameChange: true
+ 

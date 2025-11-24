@@ -1,0 +1,5 @@
+resources:
+  - ../../base
+  - far-template-worker.yaml
+  - far-template-infra.yaml
+  - far-template-master.yaml

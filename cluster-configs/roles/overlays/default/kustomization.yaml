@@ -1,0 +1,7 @@
+resources:
+  - ../../base
+patches:
+  - path: cluster-admin-patch.yaml
+    target:
+      kind: ClusterRoleBinding
+      name: cluster-admin-ldap

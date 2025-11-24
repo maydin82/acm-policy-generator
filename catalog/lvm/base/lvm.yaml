@@ -1,0 +1,21 @@
+---
+apiVersion: policy.open-cluster-management.io/v1beta1
+kind: OperatorPolicy
+metadata:
+  name: lvms-operator
+spec:
+  remediationAction: enforce
+  severity: medium
+  complianceType: musthave
+  subscription:
+    name: lvms-operator
+    namespace: openshift-storage
+    startingCSV: lvms-operator.v4.19.1  
+  operatorGroup:
+    name: odf-operator
+    targetNamespaces: 
+      - openshift-storage
+  upgradeApproval: Automatic
+  versions:
+    - lvms-operator.v4.19.1
+---

@@ -1,0 +1,6 @@
+resources:
+  - namespace.yaml 
+  - sa.yaml 
+  - cronjob.yaml 
+  - pvc.yaml
+  - backup-script-cm.yaml

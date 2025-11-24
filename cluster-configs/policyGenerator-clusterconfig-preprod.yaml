@@ -1,0 +1,84 @@
+apiVersion: policy.open-cluster-management.io/v1
+kind: PolicyGenerator
+metadata:
+  name: policy-core-generator-preprod
+placementBindingDefaults:
+  name: cluster-config-binding-preprod 
+policyDefaults:
+  categories:
+    - CM Configuration Management
+  controls: 
+    - CM-2 Baseline Configuration
+  namespace: acm-policies
+  metadataComplianceType: "musthave"
+  complianceType: "mustonlyhave"
+  remediationAction: enforce
+  severity: medium
+  policySets:
+    - policyset-preprod-clusterconfig
+  standards:
+    - NIST SP 800-53
+
+policies:
+
+
+#### Preprod Cluster Policy Start ####
+- name: internal-regcephfs-preprod
+  manifests:
+    - path: internal-reg/overlays/cephfs/preprod/cephfs-pvc.yaml
+
+- name: conf-internalregistry-preprod
+  manifests:
+    - path: ./internal-reg/overlays/cephfs/preprod/
+
+- name: conf-ldap-preprod
+  manifests:
+    - path: ./ldap/overlays/preprod
+
+- name: conf-ldapgroupsync-preprod
+  manifests:
+    - path: ./ldap-group-sync/overlays/preprod
+
+- name: conf-chronyd-preprod
+  manifests:
+    - path: ./chronyd/overlays/preprod
+
+- name: conf-proxy-preprod
+  manifests:
+    - path: ./proxy-cluster/overlays/preprod
+
+
+
+- name: conf-ingress-default-preprod
+  manifests:
+    - path: ./ingress/overlays/preprod
+
+- name: conf-kubelet-preprod
+  manifests:
+    - path: ./kubelet/overlays/preprod
+
+
+- name: conf-monitoring-preprod
+  manifests:
+    - path: ./monitoring/overlays/preprod
+
+- name: conf-userworkloadmonitoring-preprod
+  manifests:
+    - path: ./userworkload-monitoring/overlays/preprod
+
+
+- name: conf-dmz-sharding-preprod
+  manifests:
+    - path: dmz-sharding/overlays/preprod
+
+- name: conf-restrict-imagereg-preprod
+  manifests:
+    - path: restrict-imagereg/overlays/preprod
+
+
+policySets:
+
+  - description: Policy set for the policies which are going to be deployed into PreProd cluster only
+    name: policyset-preprod-clusterconfig
+    placement:
+      placementName: placement-preprod

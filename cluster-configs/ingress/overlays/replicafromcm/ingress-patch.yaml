@@ -1,0 +1,10 @@
+- op: replace
+  path: '/spec/replicas'
+  value: '{{hub (fromConfigMap "acm-policies" .ManagedClusterName "ingressdefaultcount")|toInt hub}}'
+
+- op: add
+  path: '/spec/nodePlacement'
+  value:
+    nodeSelector:
+      matchLabels:
+        node-role.kubernetes.io/router: ""

@@ -1,0 +1,2 @@
+resources:
+  - ingress-controller-dmz.yaml

@@ -1,0 +1,5 @@
+resources:
+  - ../../base
+  - mtc-controller.yaml
+  - mtc-console.yaml
+  - replication-obc.yaml

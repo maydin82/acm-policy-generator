@@ -1,0 +1,11 @@
+apiVersion: metallb.io/v1beta1
+kind: MetalLB
+metadata:
+  name: metallb
+  namespace: metallb-system
+spec:
+  speakerTolerations:   
+  - key: "node.ocs.openshift.io/storage"
+    operator: "Equal"
+    effect: "NoSchedule"
+    value: "true"

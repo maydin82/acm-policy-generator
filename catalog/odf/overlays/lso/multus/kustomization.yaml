@@ -1,0 +1,12 @@
+resources:
+  - ../../base
+  - infra01-odf-multus.yaml
+  - infra02-odf-multus.yaml
+  - infra03-odf-multus.yaml
+  - worker01-odf-multus.yaml
+  - worker02-odf-multus.yaml
+  - worker03-odf-multus.yaml
+  - worker04-odf-multus.yaml
+  - worker05-odf-multus.yaml
+  - nad-public-net.yaml
+  - storagecluster.yaml

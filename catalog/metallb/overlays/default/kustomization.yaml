@@ -1,0 +1,7 @@
+resources:
+  - ../../base
+patches: 
+  - target: 
+      kind: IPAddressPool
+    path: patch-addresspool.yaml 
+

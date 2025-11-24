@@ -1,0 +1,10 @@
+apiVersion: v1
+data:
+  ca-bundle.crt: |
+    {{ ( index ( lookup "v1" "Secret" "openshift-ingress" "router-certs-default"  ).data  "tls.crt"  ) |  base64dec | autoindent  }}
+kind: ConfigMap
+metadata:
+  name: image-registry-s3-bundle
+  namespace: openshift-config
+
+

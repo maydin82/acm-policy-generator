@@ -1,0 +1,8 @@
+resources:
+  - chronyd-mc.yaml
+  - encyriptionkey-secret.yaml
+  - hcp-pullsecret.yaml
+  - ldap-secret.yaml
+  - monitoring-hcp.yaml
+  - namespace-clusters.yaml
+  - hypershift-operator.yaml

@@ -1,0 +1,4 @@
+- op: add
+  path: /spec/registrySources/allowedRegistries/-
+  value:
+   quay.company.com.tr

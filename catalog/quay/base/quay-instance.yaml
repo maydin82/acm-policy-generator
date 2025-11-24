@@ -1,0 +1,34 @@
+apiVersion: quay.redhat.com/v1
+kind: QuayRegistry
+metadata:
+  name: quay-registry
+  namespace: quay-enterprise
+spec:
+  configBundleSecret: init-config-bundle-secret 
+  components:
+    - kind: clair
+      managed: true
+    - kind: clairpostgres
+      managed: true
+      overrides:
+        volumeSize: 70Gi
+    - kind: quay
+      managed: true
+    - kind: postgres
+      managed: true
+      overrides:
+        volumeSize: 70Gi
+    - kind: redis
+      managed: true
+    - kind: horizontalpodautoscaler
+      managed: true
+    - kind: objectstorage
+      managed: true
+    - kind: route
+      managed: true
+    - kind: mirror
+      managed: true
+    - kind: monitoring
+      managed: false
+    - kind: tls
+      managed: true

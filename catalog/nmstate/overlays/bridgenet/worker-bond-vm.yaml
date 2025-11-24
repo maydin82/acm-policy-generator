@@ -1,0 +1,32 @@
+---
+apiVersion: nmstate.io/v1
+kind: NodeNetworkConfigurationPolicy
+metadata:
+  name: worker-bond-vm
+spec:
+  desiredState:
+    interfaces:
+      - link-aggregation:
+          mode: 802.3ad
+          port:
+            - ens4f1np1
+            - ens5f0np0
+        name: bond-vm
+        ipv4:
+          enabled: false
+        state: up
+        type: bond
+        mtu: 9000  
+      - name: br-vm
+        state: up
+        type: linux-bridge
+        ipv4: 
+          enabled: false  
+        bridge:
+          options: 
+            stp:
+              enabled: false
+          port: 
+            - name: bond-vm
+  nodeSelector:
+    node-role.kubernetes.io/virtualization: ''

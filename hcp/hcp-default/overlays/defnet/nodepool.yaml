@@ -1,0 +1,28 @@
+- op: replace
+  path: /metadata/name 
+  value: defnet
+
+ 
+- op: replace
+  path: /spec/release/image
+  value: quay.io/openshift-release-dev/ocp-release:4.19.14-multi
+
+
+- op: replace
+  path: /spec/clusterName
+  value: defnet
+
+- op: replace
+  path: /spec/replicas
+  value: 3
+
+- op: replace
+  path: /spec/platform/kubevirt/compute/cores
+  value: 4
+
+- op: replace
+  path: /spec/platform/kubevirt/compute/memory
+  value: 8Gi
+
+
+

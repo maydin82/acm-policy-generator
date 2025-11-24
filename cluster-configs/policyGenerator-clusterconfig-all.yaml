@@ -1,0 +1,70 @@
+apiVersion: policy.open-cluster-management.io/v1
+kind: PolicyGenerator
+metadata:
+  name: policy-core-generator-all
+placementBindingDefaults:
+  name: cluster-config-binding-all
+policyDefaults:
+  categories:
+    - CM Configuration Management
+  controls: 
+    - CM-2 Baseline Configuration
+  namespace: acm-policies
+  metadataComplianceType: "musthave"
+  complianceType: "mustonlyhave"
+  remediationAction: enforce
+  severity: medium
+  policySets:
+    - policyset-all-clusterconfig
+  standards:
+    - NIST SP 800-53
+
+policies:
+
+####  Cluster Policy Start For All Clusters ####
+
+
+#- name: conf-roles-all
+#  manifests:
+#    - path: ./roles/overlays/default
+
+
+- name: enable-etcd-encryption
+  disabled: false
+  manifests:
+    - path: ./etcd-encrypt/overlays/default
+
+- name: conf-monitoring-hub
+  manifests:
+    - path: ./monitoring/overlays/all
+  dependencies:
+    - name: "acm-observability"
+      namespace: "acm-policies"
+      compliance: "Compliant"
+      kind: "Policy"
+      apiVersion: "policy.open-cluster-management.io/v1"
+#- name: timezone-cluster-conf
+#  manifests:
+#    - path: ./timezone/overlays/default
+
+#- name: etcdbackup-cluster-conf
+#  complianceType: "musthave"
+#  manifests:
+#    - path: etcd-backup/overlays/default
+
+#- name: dns-cluster-conf
+#  manifests:
+#    - path: dns/overlays/default
+
+####  Cluster Policy Ends For All Clusters ####
+
+
+
+
+
+policySets:
+  - description: Policy set for the policies which are going to be deployed into all clusters
+    name: policyset-all-clusterconfig
+    placement:
+      placementName: placement-all
+

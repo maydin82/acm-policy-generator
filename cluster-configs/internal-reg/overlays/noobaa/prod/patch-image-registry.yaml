@@ -1,0 +1,34 @@
+- op: add
+  path: '/spec/storage'
+  value: 
+    managementState: Unmanaged
+    s3:
+      bucket: '{{ fromConfigMap "openshift-storage" "obc-internalreg" "BUCKET_NAME" }}'
+      encrypt: false
+      region: us-east-1
+      regionEndpoint: https://{{ (lookup "route.openshift.io/v1"  "Route" "openshift-storage" "s3").spec.host }}
+      trustedCA:
+        name: image-registry-s3-bundle
+      virtualHostedStyle: false
+- op: add
+  path: /spec/nodeSelector
+  value:
+    node-role.kubernetes.io/infra-generic: ""
+- op: add
+  path: /spec/tolerations
+  value:
+    - key: infra
+      value: reserved
+      effect: NoSchedule
+    - key: infra
+      value: reserved
+      effect: NoExecute
+ 
+- op: replace
+  path: '/spec/replicas'
+  value: 3
+
+- op: add
+  path: '/spec/defaultRoute'
+  value: true
+

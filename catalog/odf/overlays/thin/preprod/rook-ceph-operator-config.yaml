@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rook-ceph-operator-config
+  namespace: openshift-storage
+data: 
+  CSI_ENABLE_CSIADDONS: "true"  
+  CSI_PLUGIN_TOLERATIONS: | 
+    - operator: "Exists" 

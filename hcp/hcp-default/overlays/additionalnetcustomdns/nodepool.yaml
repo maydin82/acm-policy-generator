@@ -1,0 +1,39 @@
+- op: replace
+  path: /metadata/name 
+  value: additionalnetcustomdns
+
+ 
+- op: replace
+  path: /spec/release/image
+  value: quay.io/openshift-release-dev/ocp-release:4.19.14-multi
+
+
+- op: replace
+  path: /spec/clusterName
+  value: additionalnetcustomdns
+
+- op: replace
+  path: /spec/replicas
+  value: 3
+
+- op: replace
+  path: /spec/platform/kubevirt/compute/cores
+  value: 4
+
+- op: replace
+  path: /spec/platform/kubevirt/compute/memory
+  value: 8Gi
+
+
+- op: replace
+  path: /spec/platform/kubevirt/attachDefaultNetwork
+  value: false
+
+
+- op: add
+  path: /spec/platform/kubevirt/additionalNetworks
+  value:
+    - name: default/vlan-666
+
+
+

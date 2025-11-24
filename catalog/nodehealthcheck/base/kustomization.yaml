@@ -1,0 +1,5 @@
+resources:
+  - nhc-install.yaml
+  - nhc-worker.yaml
+  - nhc-master.yaml
+  - nhc-infra.yaml

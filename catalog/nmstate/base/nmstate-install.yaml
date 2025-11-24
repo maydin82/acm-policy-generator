@@ -1,0 +1,23 @@
+apiVersion: policy.open-cluster-management.io/v1beta1
+kind: OperatorPolicy
+metadata:
+  name: kubernetes-nmstate-operator
+spec:
+  remediationAction: enforce
+  severity: medium
+  complianceType: musthave
+  subscription:
+    name: kubernetes-nmstate-operator
+    namespace: openshift-nmstate
+  operatorGroup:
+    name: openshift-nmstate
+    targetNamespaces: 
+      - openshift-nmstate
+  upgradeApproval: Automatic
+---
+kind: NMState
+apiVersion: nmstate.io/v1
+metadata:
+  name: nmstate
+spec: {}
+

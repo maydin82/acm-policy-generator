@@ -1,0 +1,19 @@
+---
+apiVersion: nmstate.io/v1
+kind: NodeNetworkConfigurationPolicy
+metadata:
+  name: nncp-odf-bond.yaml
+spec:
+  desiredState:
+    interfaces:
+      - link-aggregation:
+          mode: 802.3ad
+          port:
+            - ens5f0np0
+            - ens4f0np0
+        name: br-odf
+        mtu: 9000
+        state: up
+        type: bond
+  nodeSelector:
+    node-role.kubernetes.io/infra: ''

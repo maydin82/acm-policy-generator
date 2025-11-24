@@ -1,0 +1,4 @@
+- op: add
+  path: /spec/addresses
+  value: 
+    - 172.19.60.100-172.19.60.240

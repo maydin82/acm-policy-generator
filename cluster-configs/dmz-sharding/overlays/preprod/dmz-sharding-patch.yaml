@@ -1,0 +1,35 @@
+- op: replace
+  path: '/spec/domain'
+  value: company.com.tr
+
+- op: replace
+  path: '/spec/defaultCertificate'
+  value: 
+    name: dmz-def-cert 
+
+- op: replace
+  path: '/metadata/name'
+  value: dmz
+
+- op: replace
+  path: '/spec/namespaceSelector/matchLabels/name'
+  value: dmz
+
+- op: replace
+  path: '/spec/replicas'
+  value: 3
+
+- op: add
+  path: '/spec/nodePlacement'
+  value:
+    nodeSelector:
+      matchLabels:
+        node-role.kubernetes.io/routerdmz: ""
+    tolerations:
+      - effect: NoSchedule
+        key: routerdmz
+        operator: Exists
+      - effect: NoExecute
+        key: routerdmz
+        operator: Exists
+

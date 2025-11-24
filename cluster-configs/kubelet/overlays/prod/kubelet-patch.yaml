@@ -1,0 +1,7 @@
+- op: add
+  path: /spec/kubeletConfig/maxPods
+  value: 500
+
+- op: add
+  path: /spec/kubeletConfig/autoSizingReserved
+  value: true

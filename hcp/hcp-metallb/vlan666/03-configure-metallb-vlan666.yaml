@@ -1,0 +1,19 @@
+---
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: vlan666-network
+  namespace: openshift-operators
+spec:
+  autoAssign: true
+  addresses:
+  - 192.168.1.1/32
+---
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  name: advertise-vlan666-network
+  namespace: openshift-operators
+spec:
+  ipAddressPools:
+  - vlan666-network

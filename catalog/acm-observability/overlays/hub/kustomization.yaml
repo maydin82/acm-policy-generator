@@ -1,0 +1,9 @@
+resources:
+  - ../../base
+patches:
+  - path: observability-patch.yaml
+    target:
+      kind: MultiClusterObservability
+  - path: bucketclass-patch.yaml
+    target:
+      kind: BucketClass    
