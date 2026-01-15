@@ -3,5 +3,5 @@
   value: 500
 
 - op: add
-  path: /spec/kubeletConfig/autoSizingReserved
+  path: /spec/autoSizingReserved
   value: true
