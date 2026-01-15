@@ -1,0 +1,70 @@
+
+apiVersion: oadp.openshift.io/v1alpha1
+kind: DataProtectionApplication
+metadata:
+  name: oadp-dp
+  namespace: openshift-adp
+spec:
+  backupLocations:
+    - velero:
+        config:
+          profile: default
+          region: us-east-1
+          s3ForcePathStyle: 'true'
+          s3Url: 'http://s3url'
+          insecureSkipTLSVerify: "false"
+        credential:
+          key: cloud
+          name: cloud-credentials
+        default: true
+        objectStorage:
+          bucket: bucket-backup
+          prefix: velero
+        provider: aws
+  configuration:
+    nodeAgent:
+      enable: true
+      uploaderType: restic
+    velero:
+      defaultPlugins:
+        - openshift
+        - csi
+        - aws
+---
+
+apiVersion: velero.io/v1
+kind: Restore
+metadata:
+  labels:
+    velero.io/storage-location: oadp-huawei-1
+  name: backup-dep-pv-cluster
+  namespace: openshift-adp
+spec:
+  backupName: backup-dep-pv-cluster
+  restorePVs: true
+
+---
+apiVersion: velero.io/v1
+kind: Backup
+metadata:
+  name: backup-sdemir-dep-pv-cluster
+  namespace: openshift-adp
+spec:
+  csiSnapshotTimeout: 10m0s
+  defaultVolumesToFsBackup: true
+  hooks: {}
+  includeClusterResources: true
+  includedNamespaces:
+  - test-workspace
+  includedResources:
+  - deployments
+  - persistentvolumes
+  - persistentvolumeclaims
+  - pods
+  - serviceaccounts
+  itemOperationTimeout: 4h0m0s
+  metadata: {}
+  snapshotMoveData: false
+  snapshotVolumes: false
+  storageLocation: oadp-huawei-1
+  ttl: 720h0m0s
