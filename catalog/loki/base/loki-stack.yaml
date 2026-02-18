@@ -42,3 +42,85 @@ spec:
   storageClassName: changeme
   tenants:
     mode: openshift-logging
+  template:
+    compactor:
+      tolerations:
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/logging
+        value: reserved
+      - effect: NoExecute
+        key: node-role.kubernetes.io/logging
+        value: reserved
+      nodeSelector:
+        node-role.kubernetes.io/logging: ""
+    distributor:
+      tolerations:
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/logging
+        value: reserved
+      - effect: NoExecute
+        key: node-role.kubernetes.io/logging
+        value: reserved
+      nodeSelector:
+        node-role.kubernetes.io/logging: ""
+    gateway:
+      tolerations:
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/logging
+        value: reserved
+      - effect: NoExecute
+        key: node-role.kubernetes.io/logging
+        value: reserved
+      nodeSelector:
+        node-role.kubernetes.io/logging: ""
+    indexGateway:
+      tolerations:
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/logging
+        value: reserved
+      - effect: NoExecute
+        key: node-role.kubernetes.io/logging
+        value: reserved
+      nodeSelector:
+        node-role.kubernetes.io/logging: ""
+    ingester:
+      replicas: 3
+      tolerations:
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/logging
+        value: reserved
+      - effect: NoExecute
+        key: node-role.kubernetes.io/logging
+        value: reserved
+      nodeSelector:
+        node-role.kubernetes.io/logging: ""
+    querier:
+      tolerations:
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/logging
+        value: reserved
+      - effect: NoExecute
+        key: node-role.kubernetes.io/logging
+        value: reserved
+      nodeSelector:
+        node-role.kubernetes.io/logging: ""
+    queryFrontend:
+      tolerations:
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/logging
+        value: reserved
+      - effect: NoExecute
+        key: node-role.kubernetes.io/logging
+        value: reserved
+      nodeSelector:
+        node-role.kubernetes.io/logging: ""
+    ruler:
+      tolerations:
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/logging
+        value: reserved
+      - effect: NoExecute
+        key: node-role.kubernetes.io/logging
+        value: reserved
+      nodeSelector:
+        node-role.kubernetes.io/logging: ""
