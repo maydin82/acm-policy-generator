@@ -18,7 +18,7 @@ kind: AgentServiceConfig
 
 metadata:
 
-name: agent
+  name: agent
 
 spec:
 
