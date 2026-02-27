@@ -4,3 +4,4 @@ resources:
 - ./placements
 - ./managedclusterbinding
 - ./configmaps
+- enable-cim.yaml
