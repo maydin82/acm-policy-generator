@@ -6,7 +6,7 @@ metadata:
 spec:
   flexibleScaling: true
   storageDeviceSets:
-  - count: 1  # <-- Modify count to desired value. For each set of 3 disks increment the count by 1.
+  - count: '{{hub default "3" (lookup "v1" "ConfigMap" "acm-policies" .ManagedClusterName).data.odfcountsize |toInt hub}}' 
     dataPVCTemplate:
       spec:
         accessModes:
@@ -19,3 +19,5 @@ spec:
     name: ocs-deviceset
     portable: true
     replica: 1  # <-- dont touch this  
+
+
