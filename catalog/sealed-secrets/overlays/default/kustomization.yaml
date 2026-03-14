@@ -3,7 +3,7 @@ kind: Kustomization
 helmCharts:
   - name: sealed-secrets
     repo: https://bitnami-labs.github.io/sealed-secrets
-    version: 1.10.2
+    version: 2.18.4
     releaseName: sealed-secrets-controller
     namespace: kube-system
 
