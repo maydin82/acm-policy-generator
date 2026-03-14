@@ -2,3 +2,12 @@ kind: Namespace
 apiVersion: v1
 metadata:
  name: acm-policies
+---
+kind: Namespace
+apiVersion: v1
+metadata:
+ name: mustafa-argocd
+ labels:
+  openshift.io/cluster-monitoring: 'true'
+  argocd.argoproj.io/managed-by: openshift-gitops
+  product.kind: argocd

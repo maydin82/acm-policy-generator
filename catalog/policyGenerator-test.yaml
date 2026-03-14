@@ -23,23 +23,11 @@ policies:
 - name: acm-observability
   disabled: false
   manifests:
-    - path: ./acm-observability/overlays/hub
+    - path: ./sealed-secrets/overlays/default
   complianceType: "musthave"
   policySets:
     - policyset-hub-catalog
 
-#- name: lso-prod
-#  manifests:
-#    - path: ./lso/overlays/prod
-#  policySets:
-#    - policyset-hub-catalog
-
-#- name: odf-hub
-#  disabled: false
-#  manifests:
-#    - path: ./odf/overlays/noobaa-only/hub
-#  policySets:
-#    - policyset-prod-catalog
 
 policySets:
   - description: Catalog policies  applied to hub cluster

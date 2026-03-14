@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: acm-bootstrap-app
-  namespace: openshift-gitops
+  namespace: mustafa-argocd
 spec:
   project: bootstrap
   destination:
@@ -11,7 +11,7 @@ spec:
   source:
     path: bootstrap/local-hub
     repoURL: https://github.com/maydin82/acm-policy-generator.git
-    targetRevision: main
+    targetRevision: ocplab
   syncPolicy:
     automated:
       prune: false
