@@ -95,7 +95,8 @@ spec:
       p, pipeline, projects, get, *, allow
       g, system:cluster-admins, role:admin
       g, cluster-admins, role:admin
-    scopes: '[groups]'
+      g, maydin, role:admin
+    scopes: '[groups, profile, email]'
   extraConfig:
     accounts.pipeline: apiKey
     globalProjects: |-
@@ -142,7 +143,7 @@ spec:
       - cp /policy-generator/PolicyGenerator-not-fips-compliant /policy-generator-tmp/PolicyGenerator
       command:
       - /bin/bash
-      image: registry.redhat.io/rhacm2/multicluster-operators-subscription-rhel9@sha256:8151a89ebfebf2e6d336849fdd329b123b7f486938808ee80bf6bd8d44f6985c
+      image: registry.redhat.io/rhacm2/multicluster-operators-subscription-rhel9@sha256:58f24f4a9869b9fc5f67dfe5aed1bdaae61880654b20c750e17ca12867b1d9a4
       name: policy-generator-install
       volumeMounts:
       - mountPath: /policy-generator-tmp
