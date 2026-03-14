@@ -1,0 +1,22 @@
+apiVersion: policy.open-cluster-management.io/v1beta1
+kind: OperatorPolicy
+metadata:
+  name: rhobs-operator
+  namespace: acm-policies
+spec:
+  remediationAction: enforce # Change to 'inform' to only check without installing
+  severity: medium
+  complianceType: musthave
+  subscription:
+    name: rhobs-operator
+    channel: stable
+    source: redhat-operators
+    sourceNamespace: openshift-marketplace
+    installPlanApproval: Automatic
+    namespace: openshift-cluster-observability-operator
+  operatorGroup:
+    name: rhobs-operator-group
+    namespace: openshift-observability-operator
+    # Red Hat Observability Operator supports all namespaces or specific ones. 
+    # Usually, we leave targetNamespaces empty for global operators.
+    targetNamespaces: []
