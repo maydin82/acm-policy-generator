@@ -24,7 +24,6 @@ policies:
   disabled: false
   manifests:
     - path: ./sealed-secrets/overlays/default
-  complianceType: "musthave"
   policySets:
     - policyset-hub-catalog
 
