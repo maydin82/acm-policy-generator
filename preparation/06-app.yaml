@@ -6,7 +6,7 @@ metadata:
 spec:
   project: bootstrap
   destination:
-    namespace: openshift-gitops
+    namespace: mustafa-argocd
     server: https://kubernetes.default.svc
   source:
     path: bootstrap/local-hub

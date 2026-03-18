@@ -20,7 +20,7 @@ policies:
 
 
 
-- name: acm-observability
+- name: sealed-secrets
   disabled: false
   manifests:
     - path: ./sealed-secrets/overlays/default
@@ -34,16 +34,16 @@ policySets:
     placement:
       placementName: placement-hub
 
-  - description: Catalog policies  applied to prod cluster
-    name: policyset-prod-catalog
-    placement:
-      placementName: placement-prod
-  - description: Catalog policies  applied to all clusters
-    name: policyset-all-catalog
-    placement:
-      placementName: placement-all
+#  - description: Catalog policies  applied to prod cluster
+#    name: policyset-prod-catalog
+#    placement:
+#      placementName: placement-prod
+#  - description: Catalog policies  applied to all clusters
+#    name: policyset-all-catalog
+#    placement:
+#      placementName: placement-all
 
-  - description: Catalog policies  applied to preprod cluster
-    name: policyset-preprod-catalog
-    placement:
-      placementName: placement-preprod
+#  - description: Catalog policies  applied to preprod cluster
+#    name: policyset-preprod-catalog
+#    placement:
+#      placementName: placement-preprod
