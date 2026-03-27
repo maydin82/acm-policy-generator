@@ -1,2 +1,3 @@
 resources:
+  - enable-cim.yaml
   - enable-siteconfig.yaml

@@ -1,0 +1,57 @@
+apiVersion: siteconfig.open-cluster-management.io/v1alpha1
+kind: ClusterInstance
+metadata:
+  name: "example-clusterinstance"
+  namespace: "example-sno"
+spec:
+  clusterName: example-sno
+  clusterImageSetNameRef: img4.17.4-x86-64-appsub
+  baseDomain: cotton.blue
+  holdInstallation: false
+  # extraManifestsRefs:
+  #   - name: extra-machine-configs
+  #   - name: enable-crun
+  machineNetwork:
+    - cidr: 192.168.1.0/24
+  networkType: OVNKubernetes
+  sshPublicKey: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEsCJw3L/J5C82Fge6lnHU7kTDXKZy8Z5e6iqoHzvJ7p maydin@maydin-mac"
+  pullSecretRef:
+    name: "pull-secret"
+  templateRefs:
+    - name: ai-cluster-templates-v1
+      namespace: open-cluster-management
+  nodes:
+    - role: master
+      templateRefs:
+        - name: ai-node-templates-v1
+          namespace: open-cluster-management
+      bmcCredentialsName:
+        name: "example-bmh-secret"
+      bmcAddress: redfish-virtualmedia+https://192.168.1.102:8000/redfish/v1/Systems/35f0970f-e83a-400a-99b7-8faca85b761f
+      bootMACAddress: 52:54:00:ac:c6:ae
+      bootMode: UEFI
+      hostName: example-sno
+      nodeNetwork:
+        interfaces:
+          - name: "ens1s0"
+            macAddress: "52:54:00:ac:c6:ae"
+        config:
+          interfaces:
+            - name: ens1s0
+              type: ethernet
+              state: up
+              ipv4:
+                enabled: true
+                dhcp: true
+          dns-resolver:
+             config:
+               search:
+               - cotton.blue
+               server:
+               - 192.168.1.1
+          routes:
+            config:
+            - destination: 0.0.0.0/0
+              next-hop-interface: ens1s0
+              next-hop-address: 192.168.1.1
+              table-id: 254
