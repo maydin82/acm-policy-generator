@@ -5,8 +5,8 @@ metadata:
   namespace: "example-sno"
 spec:
   clusterName: example-sno
-  clusterImageSetNameRef: img4.17.4-x86-64-appsub
-  baseDomain: cotton.blue
+  clusterImageSetNameRef: img4.21.6-x86-64-appsub
+  baseDomain: test.com
   holdInstallation: false
   # extraManifestsRefs:
   #   - name: extra-machine-configs
@@ -46,7 +46,7 @@ spec:
           dns-resolver:
              config:
                search:
-               - cotton.blue
+               - test.com
                server:
                - 192.168.1.1
           routes:
