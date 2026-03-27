@@ -18,10 +18,16 @@ policyDefaults:
     - NIST SP 800-53
 policies:
 
-
+- name: cluster-install
+  disabled: false
+  manifests:
+    - path: ./cluster-install/overlays/clusters
+  policySets:
+    - policyset-hub-catalog
 
 - name: sealed-secrets
   disabled: false
+  complianceType: "musthave"
   manifests:
     - path: ./sealed-secrets/overlays/default
   policySets:
