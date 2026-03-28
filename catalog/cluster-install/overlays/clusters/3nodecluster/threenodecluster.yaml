@@ -135,7 +135,7 @@ spec:
       extraAnnotations:
         BareMetalHost:
           bmac.agent-install.openshift.io/remove-agent-and-node-on-delete: "true"
-      hostName: master2
+      hostName: master3
       ironicInspect: ""
       nodeNetwork:
         config:
