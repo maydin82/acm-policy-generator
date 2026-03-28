@@ -18,8 +18,6 @@ spec:
   extraLabels:
     ManagedCluster:
       du-profile: "latest"
-      common: true
-      group-du-3node: ""
       sites : "example-multinode"
   machineNetwork:
     - cidr: 192.168.1.0/24
