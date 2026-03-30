@@ -5,7 +5,7 @@ generatorOptions:
   disableNameSuffixHash: true
 
 configMapGenerator:
-  - name: ai-cluster-templates-KlusterletAddonConfig
+  - name: ai-cluster-templates-klusterletaddon
     namespace: open-cluster-management
     files:
     - KlusterletAddonConfig=KlusterletAddonConfig.yaml
