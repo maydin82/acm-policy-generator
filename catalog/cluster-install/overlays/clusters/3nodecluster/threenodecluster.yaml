@@ -35,6 +35,9 @@ spec:
   templateRefs:
     - name: ai-cluster-templates-v1
       namespace: open-cluster-management 
+  templateRefs:
+    - name: hcp-cluster-templates-custom
+      namespace: open-cluster-management
   nodes:
     - automatedCleaningMode: disabled
       bmcAddress: ilo5-virtualmedia+https://1.1.1.1/redfish/v1/Systems/1

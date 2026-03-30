@@ -19,7 +19,7 @@ policyDefaults:
 policies:
 
 - name: cluster-install
-  disabled: true
+  disabled: false
   manifests:
     - path: ./cluster-install/overlays/clusters
   policySets:
