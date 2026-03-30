@@ -4,6 +4,7 @@ metadata:
   name: "example-ai-3node"
   namespace: "example-ai-3node"
 spec:
+  platformType: BareMetal
   baseDomain: "example.com"
   pullSecretRef:
     name: "assisted-deployment-pull-secret"
@@ -38,14 +39,7 @@ spec:
     - name: ai-cluster-templates-klusterletaddon
       namespace: open-cluster-management
   nodes:
-    - automatedCleaningMode: disabled
-      bmcAddress: ilo5-virtualmedia+https://1.1.1.1/redfish/v1/Systems/1
-      bmcCredentialsName:
-        name: example-bmh-secret
-      bootMACAddress: b4:7a:f1:ae:9b:67
-      bootMode: UEFI
-      hostName: master1
-      ironicInspect: ""
+    - hostName: master1
       nodeNetwork:
         config:
           dns-resolver:
@@ -81,17 +75,7 @@ spec:
       templateRefs:
         - name: ai-node-templates-v1
           namespace: open-cluster-management
-    - automatedCleaningMode: disabled
-      bmcAddress: ilo5-virtualmedia+https://2.2.2.2/redfish/v1/Systems/1
-      bmcCredentialsName:
-        name: example-bmh-secret
-      bootMACAddress: b4:7a:f1:a8:73:db
-      bootMode: UEFI
-      extraAnnotations:
-        BareMetalHost:
-          bmac.agent-install.openshift.io/remove-agent-and-node-on-delete: "true"
-      hostName: master2
-      ironicInspect: ""
+    - hostName: master2
       nodeNetwork:
         config:
           dns-resolver:
@@ -128,17 +112,7 @@ spec:
         - name: ai-node-templates-v1
           namespace: open-cluster-management
 
-    - automatedCleaningMode: disabled
-      bmcAddress: ilo5-virtualmedia+https://3.3.3.3/redfish/v1/Systems/1
-      bmcCredentialsName:
-        name: example-bmh-secret
-      bootMACAddress: b4:7a:f1:a8:73:dc
-      bootMode: UEFI
-      extraAnnotations:
-        BareMetalHost:
-          bmac.agent-install.openshift.io/remove-agent-and-node-on-delete: "true"
-      hostName: master3
-      ironicInspect: ""
+    - hostName: master3
       nodeNetwork:
         config:
           dns-resolver:
