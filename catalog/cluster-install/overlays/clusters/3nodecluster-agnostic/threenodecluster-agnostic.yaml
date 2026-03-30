@@ -5,6 +5,8 @@ metadata:
   namespace: "example-ai-3node"
 spec:
   platformType: None
+  suppressedManifests: 
+    - BareMetalHost
   baseDomain: "example.com"
   pullSecretRef:
     name: "assisted-deployment-pull-secret"
