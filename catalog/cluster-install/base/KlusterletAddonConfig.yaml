@@ -3,11 +3,12 @@ kind: KlusterletAddonConfig
 metadata:
   annotations:
     siteconfig.open-cluster-management.io/sync-wave: "2"
-  name: "{{ .Spec.ClusterName }}"
-  namespace: "{{ .Spec.ClusterName }}"
+  # ACM Policy'nin dokunmaması için escape ediyoruz:
+  name: '{{ "{{" }} .Spec.ClusterName {{ "}}" }}'
+  namespace: '{{ "{{" }} .Spec.ClusterName {{ "}}" }}'
 spec:
-  clusterName: "{{ .Spec.ClusterName }}"
-  clusterNamespace: "{{ .Spec.ClusterName }}"
+  clusterName: '{{ "{{" }} .Spec.ClusterName {{ "}}" }}'
+  clusterNamespace: '{{ "{{" }} .Spec.ClusterName {{ "}}" }}'
   applicationManager:
     enabled: false
   certPolicyController:
