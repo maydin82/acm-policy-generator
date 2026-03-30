@@ -71,7 +71,7 @@ spec:
       rootDeviceHints:
         deviceName: /dev/nvme0n1
       templateRefs:
-        - name: ai-agnostic-node-template-custom
+        - name: ai-node-templates-v1
           namespace: open-cluster-management
     - hostName: master2
       nodeNetwork:
@@ -107,7 +107,7 @@ spec:
         deviceName: /dev/nvme0n1
       role: master
       templateRefs:
-        - name: ai-agnostic-node-template-custom
+        - name: ai-node-templates-v1
           namespace: open-cluster-management
 
     - hostName: master3
@@ -144,5 +144,5 @@ spec:
         deviceName: /dev/nvme0n1
       role: master
       templateRefs:
-        - name: ai-agnostic-node-template-custom
+        - name: ai-node-templates-v1
           namespace: open-cluster-management
