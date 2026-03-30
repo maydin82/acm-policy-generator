@@ -1,3 +1,11 @@
 resources:
   - enable-cim.yaml
   - enable-siteconfig.yaml
+generatorOptions:
+  disableNameSuffixHash: true
+
+configMapGenerator:
+  - name: ai-cluster-templates-KlusterletAddonConfig
+    namespace: open-cluster-management
+    files:
+    - KlusterletAddonConfig=KlusterletAddonConfig.yaml

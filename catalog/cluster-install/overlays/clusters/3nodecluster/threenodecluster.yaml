@@ -35,7 +35,7 @@ spec:
   templateRefs:
     - name: ai-cluster-templates-v1
       namespace: open-cluster-management 
-    - name: hcp-cluster-templates-custom
+    - name: ai-cluster-templates-KlusterletAddonConfig
       namespace: open-cluster-management
   nodes:
     - automatedCleaningMode: disabled
