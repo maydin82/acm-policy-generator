@@ -3,6 +3,6 @@ kind: Kustomization
 resources:
   - cluster-ns.yaml
   - pull-secret.yaml
-  - threenodecluster.yaml
+  - threenodecluster-agnostic.yaml
   - bmc-secret.yaml
   

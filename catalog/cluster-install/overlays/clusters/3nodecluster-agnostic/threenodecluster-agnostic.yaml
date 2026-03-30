@@ -4,7 +4,7 @@ metadata:
   name: "example-ai-3node"
   namespace: "example-ai-3node"
 spec:
-  platformType: BareMetal
+  platformType: None
   baseDomain: "example.com"
   pullSecretRef:
     name: "assisted-deployment-pull-secret"
@@ -27,10 +27,6 @@ spec:
   clusterNetwork:
     - cidr: 10.128.0.0/14
       hostPrefix: 23
-  apiVIPs:
-    - 192.168.1.2
-  ingressVIPs:
-    - "192.168.1.3"
   additionalNTPSources:
     - 5.5.5.5
   templateRefs:
