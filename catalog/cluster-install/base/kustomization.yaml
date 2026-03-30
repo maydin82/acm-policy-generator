@@ -1,6 +1,7 @@
 resources:
   - enable-cim.yaml
   - enable-siteconfig.yaml
+  - ai-agnostic-node-template-custom
 generatorOptions:
   disableNameSuffixHash: true
 
