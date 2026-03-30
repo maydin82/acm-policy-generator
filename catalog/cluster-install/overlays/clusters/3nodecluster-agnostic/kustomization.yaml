@@ -4,5 +4,4 @@ resources:
   - cluster-ns.yaml
   - pull-secret.yaml
   - threenodecluster-agnostic.yaml
-  - bmc-secret.yaml
   
