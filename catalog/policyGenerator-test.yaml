@@ -19,7 +19,7 @@ policyDefaults:
 policies:
 
 - name: cluster-install
-  disabled: false
+  disabled: true
   complianceType: "musthave"
   configurationPolicyAnnotations: {"policy.open-cluster-management.io/disable-templates": "true"}
   manifests:
