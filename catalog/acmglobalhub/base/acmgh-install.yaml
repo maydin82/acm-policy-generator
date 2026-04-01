@@ -1,7 +1,7 @@
 apiVersion: policy.open-cluster-management.io/v1beta1
 kind: OperatorPolicy
 metadata:
-  name: o
+  name: multicluster-global-hub-operator-rh
 spec:
   remediationAction: enforce
   severity: medium
