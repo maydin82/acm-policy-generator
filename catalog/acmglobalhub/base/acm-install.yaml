@@ -1,0 +1,17 @@
+apiVersion: policy.open-cluster-management.io/v1beta1
+kind: OperatorPolicy
+metadata:
+  name: advanced-cluster-management
+spec:
+  remediationAction: enforce
+  severity: medium
+  complianceType: musthave
+  subscription:
+    name: advanced-cluster-management
+    namespace: open-cluster-management
+    channel: release-2.16
+  operatorGroup:
+    name: advanced-cluster-management
+    targetNamespaces:
+      - open-cluster-management
+  upgradeApproval: Automatic

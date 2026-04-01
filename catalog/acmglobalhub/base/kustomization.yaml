@@ -1,2 +1,3 @@
 resources:
   - acmgh-install.yaml 
+  - acm-install.yaml
