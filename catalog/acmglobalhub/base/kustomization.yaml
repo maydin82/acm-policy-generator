@@ -1,3 +1,4 @@
 resources:
   - acmgh-install.yaml 
   - acm-install.yaml
+  - multiclusterhub.yaml
