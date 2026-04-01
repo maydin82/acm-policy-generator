@@ -2,3 +2,4 @@ resources:
   -  ../../base
 patches:
   - path: multiclusterhub-patch.yaml
+  - path: multiclusterglobalhub-patch.yaml
