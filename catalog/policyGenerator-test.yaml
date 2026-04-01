@@ -36,6 +36,13 @@ policies:
     - policyset-hub-catalog
 
 
+- name: globalhub
+  disabled: false
+  complianceType: "musthave"
+  manifests:
+    - path: ./acmglobalhub/overlays/default
+  policySets:
+    - policyset-globalhub-catalog
 
 
 policySets:
@@ -43,6 +50,11 @@ policySets:
     name: policyset-hub-catalog
     placement:
       placementName: placement-hub
+
+  - description: Install global hub
+    name: policyset-globalhub-catalog
+    placement:
+      placementName: placement-globalhub
 
 #  - description: Catalog policies  applied to prod cluster
 #    name: policyset-prod-catalog
