@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: global-cluster-labels
+  namespace: acm-policies
+data:
+apiVersion: v1
+ kind: ConfigMap
+ metadata:
+   name: global-cluster-labels
+   namespace: acm-policies
+ data:
+   prod-bm: |
+     env: "prod"
+     twistlock: "true"
+     conjur: "true"
+     amq-streams: "true"
+   payprod-bm: |
+     env: "prod"
+     twistlock: "true"
+     conjur: "true"
+     amq-streams: "true"
