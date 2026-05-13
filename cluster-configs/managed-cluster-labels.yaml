@@ -1,0 +1,29 @@
+apiVersion: policy.open-cluster-management.io/v1
+kind: ConfigurationPolicy
+metadata:
+  name: managed-clusters-labels
+spec:
+  remediationAction: inform
+  severity: low
+  object-templates-raw: |
+    {{ $labelsCM := (lookup "v1" "ConfigMap" "acm-policies" "global-cluster-labels") }}
+    {{ if $labelsCM }}
+      {{ range $cluster := (lookup "cluster.open-cluster-management.io/v1" "ManagedCluster" "" "").items }}
+        {{ $cName := $cluster.metadata.name }}
+        {{ if hasKey $labelsCM.data $cName }}
+    - complianceType: musthave
+      objectDefinition:
+        apiVersion: cluster.open-cluster-management.io/v1
+        kind: ManagedCluster
+        metadata:
+          name: {{ $cName }}
+          labels:
+            {{ range $line := (split "\n" (index $labelsCM.data $cName)) }}
+              {{ $pair := (split ":" $line) }}
+              {{ if gt (len $pair) 1 }}
+            {{ $pair._0 | trim }}: {{ $pair._1 | trim }}
+              {{ end }}
+            {{ end }}
+        {{ end }}
+      {{ end }}
+    {{ end }}
