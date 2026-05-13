@@ -1,0 +1,445 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    gitops/aggregate-to-controller: "true"
+  name: openshift-gitops-policy-admin
+rules:
+- apiGroups:
+  - policy.open-cluster-management.io
+  resources:
+  - policies
+  - configurationpolicies
+  - certificatepolicies
+  - operatorpolicies
+  - policysets
+  - placementbindings
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - apps.open-cluster-management.io
+  resources:
+  - placementrules
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - cluster.open-cluster-management.io
+  resources:
+  - placements
+  - placements/status
+  - placementdecisions
+  - placementdecisions/status
+  - managedclustersets/bind
+  - managedclustersetbindings
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+---
+apiVersion: argoproj.io/v1beta1
+kind: ArgoCD
+metadata:
+  name: openshift-gitops
+spec:
+  applicationSet:
+    resources:
+      limits:
+        cpu: "2"
+        memory: 1Gi
+      requests:
+        cpu: 500m
+        memory: 256Mi
+    webhookServer:
+      ingress:
+        enabled: false
+      route:
+        enabled: false
+  controller:
+    env:
+    - name: ARGOCD_APPLICATION_CONTROLLER_REPO_SERVER_TIMEOUT_SECONDS
+      value: "120"
+    - name: ARGOCD_K8S_CLIENT_QPS
+      value: "350"
+    - name: ARGOCD_K8S_CLIENT_BURST
+      value: "350"
+    - name: ARGOCD_RECONCILIATION_JITTER
+      value: 3m
+    - name: ARGOCD_K8S_TCP_TIMEOUT
+      value: 60s
+    logLevel: info
+    processors: {}
+    resources:
+      limits:
+        cpu: "4"
+        memory: 8Gi
+      requests:
+        cpu: "1"
+        memory: 2Gi
+    sharding: {}
+  extraConfig:
+    accounts.pipeline: apiKey
+    globalProjects: |-
+      - labelSelector:
+          matchExpressions:
+            - key: argocd.argoproj.io/project-inherit
+              operator: In
+              values:
+                - global-project-template
+                - global
+        projectName: global-project-template
+    resource.compareoptions: |
+      ignoreResourceStatusField: all
+    resource.customizations.ignoreResourceUpdates.all: |
+      jsonPointers:
+      - /status
+    resource.ignoreResourceUpdatesEnabled: "true"
+  grafana:
+    enabled: false
+    ingress:
+      enabled: false
+    resources:
+      limits:
+        cpu: 500m
+        memory: 256Mi
+      requests:
+        cpu: 25m
+        memory: 128Mi
+    route:
+      enabled: false
+  ha:
+    enabled: false
+    resources:
+      limits:
+        cpu: 500m
+        memory: 256Mi
+      requests:
+        cpu: 25m
+        memory: 28Mi
+  initialSSHKnownHosts: {}
+  kustomizeBuildOptions: --enable-alpha-plugins --enable-helm
+  monitoring:
+    enabled: false
+  notifications:
+    enabled: true
+  prometheus:
+    enabled: false
+    ingress:
+      enabled: false
+    route:
+      enabled: false
+  rbac:
+    defaultPolicy: role:none
+    policy: "# Access Control \np, role:none, applications, get, */*, deny\np, role:none,
+      certificates, get, *, deny\np, role:none, clusters, get, *, deny\np, role:none,
+      repositories, get, *, deny\np, role:none, projects, get, *, deny\np, role:none,
+      accounts, get, *, deny\np, role:none, gpgkeys, get, *, deny\np, pipeline, applications,
+      get, */*,allow\np, pipeline, applications, sync, */*,allow\np, pipeline, projects,
+      get, *, allow\ng, system:cluster-admins, role:admin\n"
+    scopes: '[groups]'
+  redis:
+    resources:
+      limits:
+        cpu: "2"
+        memory: 2Gi
+      requests:
+        cpu: 250m
+        memory: 512Mi
+  repo:
+    env:
+    - name: KUSTOMIZE_PLUGIN_HOME
+      value: /etc/kustomize/plugin
+    - name: POLICY_GEN_ENABLE_HELM
+      value: "true"
+    initContainers:
+    - args:
+      - -c
+      - cp /policy-generator/PolicyGenerator-not-fips-compliant /policy-generator-tmp/PolicyGenerator
+      command:
+      - /bin/bash
+      image: '{{ (index (lookup "apps/v1" "Deployment" "open-cluster-management" "multicluster-operators-hub-subscription").spec.template.spec.containers
+        0).image }}'
+      name: policy-generator-install
+      volumeMounts:
+      - mountPath: /policy-generator-tmp
+        name: policy-generator
+    resources:
+      limits:
+        cpu: "2"
+        memory: 2Gi
+      requests:
+        cpu: 500m
+        memory: 512Mi
+    volumeMounts:
+    - mountPath: /etc/kustomize/plugin/policy.open-cluster-management.io/v1/policygenerator
+      name: policy-generator
+    volumes:
+    - emptyDir: {}
+      name: policy-generator
+  resourceExclusions: "- apiGroups:\n  - policy.open-cluster-management.io\n  clusters:\n
+    \ - '*'\n  kinds:\n  - ConfigurationPolicy      \n- apiGroups:\n  - compliance.openshift.io\n
+    \ kinds:\n  - ComplianceCheckResult\n  - ComplianceRemediation  \n- apiGroups:\n
+    \ - tekton.dev\n  clusters:\n  - '*'\n  kinds:\n  - TaskRun\n  - PipelineRun\n"
+  resourceHealthChecks:
+  - check: |
+      hs = {}
+      if obj.spec.disabled ~= nil and obj.spec.disabled == true then
+        hs.status = "Healthy"
+        return hs
+      end
+      if obj.status == nil or obj.status.compliant == nil then
+        hs.status = "Progressing"
+        hs.message = "Waiting for the status to be reported"
+        return hs
+      end
+      if obj.status.compliant == "Compliant" then
+        hs.status = "Healthy"
+      else
+        hs.status = "Degraded"
+      end
+      noncompliants = {}
+      if obj.status.status ~= nil then
+        -- "root" policy
+        for i, entry in ipairs(obj.status.status) do
+          if entry.compliant ~= "Compliant" then
+            table.insert(noncompliants, entry.clustername)
+          end
+        end
+        if #noncompliants == 0 then
+          hs.message = "All clusters are compliant"
+        else
+          hs.message = "NonCompliant clusters: " .. table.concat(noncompliants, ", ")
+        end
+      elseif obj.status.details ~= nil then
+        -- "replicated" policy
+        for i, entry in ipairs(obj.status.details) do
+          if entry.compliant ~= "Compliant" then
+            table.insert(noncompliants, entry.templateMeta.name)
+          end
+        end
+        if #noncompliants == 0 then
+          hs.message = "All templates are compliant"
+        else
+          hs.message = "NonCompliant templates: " .. table.concat(noncompliants, ", ")
+        end
+      end
+      return hs
+    group: policy.open-cluster-management.io
+    kind: Policy
+  - check: |
+      hs = {}
+      hs.status = "Progressing"
+      hs.message = ""
+      if obj.status ~= nil then
+        if obj.status.health ~= nil then
+          hs.status = obj.status.health.status
+          if obj.status.health.message ~= nil then
+            hs.message = obj.status.health.message
+          end
+        end
+      end
+      return hs
+    group: argoproj.io
+    kind: Application
+  - check: |
+      health_status = {}
+      if obj.status ~= nil then
+        if obj.status.conditions ~= nil then
+          numDegraded = 0
+          numPending = 0
+          msg = ""
+          for i, condition in pairs(obj.status.conditions) do
+            msg = msg .. i .. ": " .. condition.type .. " | " .. condition.status .. "\n"
+            if condition.type == "InstallPlanPending" and condition.status == "True" then
+              numPending = numPending + 1
+            elseif (condition.type == "InstallPlanMissing" and condition.reason ~= "ReferencedInstallPlanNotFound") then
+              numDegraded = numDegraded + 1
+            elseif (condition.type == "CatalogSourcesUnhealthy" or condition.type == "InstallPlanFailed" or condition.type == "ResolutionFailed") and condition.status == "True" then
+              numDegraded = numDegraded + 1
+            end
+          end
+          if numDegraded == 0 and numPending == 0 then
+            health_status.status = "Healthy"
+            health_status.message = msg
+            return health_status
+          elseif numPending > 0 and numDegraded == 0 then
+            health_status.status = "Progressing"
+            health_status.message = "An install plan for a subscription is pending installation"
+            return health_status
+          else
+            health_status.status = "Degraded"
+            health_status.message = msg
+            return health_status
+          end
+        end
+      end
+      health_status.status = "Progressing"
+      health_status.message = "An install plan for a subscription is pending installation"
+      return health_status
+    group: operators.coreos.com
+    kind: Subscription
+  - check: |
+      hs = {}
+      if obj.status ~= nil then
+        if obj.status.phase ~= nil then
+          if obj.status.phase == "Complete" then
+            hs.status = "Healthy"
+            hs.message = obj.status.phase
+            return hs
+          end
+        end
+      end
+      hs.status = "Progressing"
+      hs.message = "Waiting for InstallPlan to complete"
+      return hs
+    group: operators.coreos.com
+    kind: InstallPlan
+  - check: |
+      hs = {}
+      if obj.status ~= nil and obj.status.conditions ~= nil then
+          for i, condition in ipairs(obj.status.conditions) do
+            if condition.status == "True" or condition.reason == "InstallSuccessful" or condition.reason == "UpgradeSuccessful" then
+                hs.status = "Healthy"
+                hs.message = "Install Successful"
+                return hs
+            end
+          end
+      end
+      hs.status = "Progressing"
+      hs.message = "Waiting for Central to deploy."
+      return hs
+    group: platform.stackrox.io
+    kind: Central
+  - check: |
+      hs = {}
+      hs.status = "Progressing"
+      hs.message = ""
+      if obj.status ~= nil then
+        if obj.status.tags ~= nil then
+          numTags = 0
+          for _ , item in pairs(obj.status.tags) do
+            numTags = numTags + 1
+            numItems = 0
+            if item.tags ~= nil then
+              for _ , item in pairs(item.tags) do
+                numItems = numItems + 1
+              end
+              if numItems == 0 then
+                return hs
+              end
+            end
+          end
+          if numTags > 0 then
+            hs.status = "Healthy"
+            hs.message = "ImageStream has tags resolved"
+            return hs
+          end
+        end
+      end
+      return hs
+    group: image.openshift.io
+    kind: ImageStream
+  - check: |
+      hs = {}
+      if obj.status ~= nil then
+        if obj.status.phase ~= nil then
+          if obj.status.phase == "Complete" then
+            hs.status = "Healthy"
+            hs.message = obj.status.phase
+            return hs
+          end
+        end
+      end
+      hs.status = "Progressing"
+      hs.message = "Waiting for Build to complete"
+      return hs
+    group: build.openshift.io
+    kind: Build
+  - check: |
+      hs = {}
+      if obj.status ~= nil then
+        if obj.status.phase ~= nil then
+          if obj.status.phase == "Pending" then
+            hs.status = "Healthy"
+            hs.message = obj.status.phase
+            return hs
+          end
+          if obj.status.phase == "Bound" then
+            hs.status = "Healthy"
+            hs.message = obj.status.phase
+            return hs
+          end
+        end
+      end
+      hs.status = "Progressing"
+      hs.message = "Waiting for PVC"
+      return hs
+    kind: PersistentVolumeClaim
+  resourceIgnoreDifferences:
+    resourceIdentifiers:
+    - customization:
+        jsonPointers:
+        - /status/ingress
+        - /metadata/annotations
+      group: route.openshift.io
+      kind: Route
+    - customization:
+        jsonPointers:
+        - /status/ingress
+      group: quay.redhat.com
+      kind: QuayRegistry
+  resourceTrackingMethod: annotation
+  server:
+    autoscale:
+      enabled: true
+    env:
+    - name: ARGOCD_SERVER_ENABLE_GZIP
+      value: "true"
+    - name: ARGOCD_SERVER_REPO_SERVER_TIMEOUT_SECONDS
+      value: "120"
+    extraCommandArgs:
+    - --enable-gzip
+    grpc:
+      ingress:
+        enabled: false
+    ingress:
+      enabled: false
+    resources:
+      limits:
+        cpu: "1"
+        memory: 2Gi
+      requests:
+        cpu: 250m
+        memory: 512Mi
+    route:
+      enabled: true
+    service:
+      type: ""
+  sso:
+    dex:
+      openShiftOAuth: true
+      resources:
+        limits:
+          cpu: 500m
+          memory: 256Mi
+        requests:
+          cpu: 250m
+          memory: 56Mi
+    provider: dex
+  tls:
+    ca: {}

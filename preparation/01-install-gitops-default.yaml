@@ -1,0 +1,83 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    argocd.argoproj.io/managed-by: openshift-gitops
+    openshift.io/cluster-monitoring: "true"
+    product.kind: argocd
+  name: openshift-gitops
+---
+aggregationRule:
+  clusterRoleSelectors:
+  - matchLabels:
+      gitops/aggregate-to-controller: "true"
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  annotations:
+    rbac.authorization.kubernetes.io/autoupdate: "true"
+  name: gitops-controller
+rules: []
+---
+aggregationRule:
+  clusterRoleSelectors:
+  - matchLabels:
+      rbac.authorization.k8s.io/aggregate-to-admin: "true"
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    gitops/aggregate-to-controller: "true"
+  name: gitops-controller-admin
+rules: []
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    gitops/aggregate-to-controller: "true"
+  name: gitops-controller-view
+rules:
+- apiGroups:
+  - '*'
+  resources:
+  - '*'
+  verbs:
+  - get
+  - list
+  - watch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: openshift-gitops-admin
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+- kind: ServiceAccount
+  name: openshift-gitops-argocd-application-controller
+  namespace: openshift-gitops
+---
+apiVersion: policy.open-cluster-management.io/v1beta1
+kind: OperatorPolicy
+metadata:
+  name: openshift-gitops-operator
+spec:
+  complianceType: musthave
+  remediationAction: enforce
+  severity: medium
+  subscription:
+    config:
+      env:
+      - name: ARGOCD_CLUSTER_CONFIG_NAMESPACES
+        value: openshift-gitops,gitops
+      - name: CONTROLLER_CLUSTER_ROLE
+        value: gitops-controller
+    name: openshift-gitops-operator
+    startingCSV: openshift-gitops-operator.v1.16.1
+  upgradeApproval: Automatic
+  versions:
+  - openshift-gitops-operator.v1.16.0-0.1746014725.p
+  - openshift-gitops-operator.v1.16.1
