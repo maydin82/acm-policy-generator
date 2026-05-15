@@ -1,0 +1,87 @@
+apiVersion: policy.open-cluster-management.io/v1
+kind: ConfigurationPolicy
+metadata:
+  name: ingress-policy
+spec:
+  remediationAction: inform
+  object-templates-raw: |
+    - complianceType: mustonlyhave
+      metadataComplianceType: musthave
+      objectDefinition:
+        apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        metadata:
+          name: default
+          namespace: openshift-ingress-operator
+          annotations:
+            ingress.operator.openshift.io/default-enable-http2: 'true'
+        spec:
+          {{hub - /* Fetch data from Hub ConfigMap named after the managed cluster */ hub}}
+          {{hub $infraEnabled := fromConfigMap "acm-policies" .ManagedClusterName "infra_enabled" hub}}
+          {{hub $extRouterEnabled := fromConfigMap "acm-policies" .ManagedClusterName "external_router_enabled" hub}}
+          {{hub $replicas := fromConfigMap "acm-policies" .ManagedClusterName "ingress_replicas" hub}}
+
+          defaultCertificate:
+            name: tls-secret
+          httpHeaders:
+            forwardedHeaderPolicy: Append
+
+          {{hub if and (eq $infraEnabled "true") (eq $extRouterEnabled "false") hub}}
+          nodePlacement:
+            nodeSelector:
+              matchLabels:
+                node-role.kubernetes.io/infra: ''
+            tolerations:
+              - effect: NoSchedule
+                key: infra
+                value: reserved
+              - effect: NoExecute
+                key: infra
+                value: reserved
+              - key: router
+                value: reserved
+                effect: NoSchedule
+              - key: router
+                value: reserved
+                effect: NoExecute
+          {{hub end hub}}
+
+          {{hub if and (eq $infraEnabled "true") (eq $extRouterEnabled "true") hub}}
+          nodePlacement:
+            nodeSelector:
+              matchLabels:
+                node-role.kubernetes.io/infra: ''
+            tolerations:
+              - key: router
+                value: reserved
+                effect: NoSchedule
+              - key: router
+                value: reserved
+                effect: NoExecute
+          {{hub end hub}}
+
+          tlsSecurityProfile:
+            type: Custom
+            custom:
+              ciphers:
+                - TLS_AES_128_GCM_SHA256
+                - TLS_AES_256_GCM_SHA384
+                - TLS_CHACHA20_POLY1305_SHA256
+                - ECDHE-ECDSA-AES128-GCM-SHA256
+                - ECDHE-RSA-AES128-GCM-SHA256
+                - ECDHE-ECDSA-AES256-GCM-SHA384
+                - ECDHE-RSA-AES256-GCM-SHA384
+                - ECDHE-ECDSA-CHACHA20-POLY1305
+                - ECDHE-RSA-CHACHA20-POLY1305
+                - DHE-RSA-AES128-GCM-SHA256
+                - DHE-RSA-AES256-GCM-SHA384
+                - AES128-GCM-SHA256
+                - AES128-SHA
+                - AES128-SHA256
+                - AES256-GCM-SHA384
+                - AES256-SHA
+                - AES256-SHA256
+                - CAMELLIA128-SHA
+                - CAMELLIA256-SHA
+              minTLSVersion: VersionTLS12
+          replicas: {{hub $replicas | default 3 hub}}

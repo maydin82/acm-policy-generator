@@ -1,0 +1,34 @@
+apiVersion: policy.open-cluster-management.io/v1
+kind: ConfigurationPolicy
+metadata:
+  name: dns-policy
+spec:
+  remediationAction: inform
+  object-templates-raw: |           
+    - complianceType: mustonlyhave
+      metadataComplianceType: musthave
+      objectDefinition:
+        apiVersion: operator.openshift.io/v1
+        kind: DNS
+        metadata:
+          name: default
+        spec:
+          {{- /* Look up 'cache' key in ConfigMap named after the cluster */}}
+          {{hub- $cacheEnabled := fromConfigMap "acm-policies" .ManagedClusterName "cache" hub}}
+          {{hub- if eq $cacheEnabled "true" hub}}
+          cache:
+            negativeTTL: 0s
+            positiveTTL: 0s
+          {{hub- end hub}}
+          logLevel: Normal
+          nodePlacement:
+            tolerations:
+            - operator: Exists
+          operatorLogLevel: Normal
+          upstreamResolvers:
+            policy: Sequential
+            protocolStrategy: ""
+            transportConfig: {}
+            upstreams:
+            - port: 53
+              type: SystemResolvConf
