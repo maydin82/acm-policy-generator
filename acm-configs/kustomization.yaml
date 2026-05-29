@@ -3,5 +3,5 @@ kind: Kustomization
 resources:
 - ./placements
 - ./managedclusterbinding
-- ./configmaps
-- enable-cim.yaml
+#- ./configmaps
+#- enable-cim.yaml
