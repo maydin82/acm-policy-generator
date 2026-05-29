@@ -1,0 +1,38 @@
+apiVersion: policy.open-cluster-management.io/v1
+kind: PolicyGenerator
+metadata:
+  name: policy-hub-generator-hub
+placementBindingDefaults:
+  name: cluster-config-binding-hub
+policyDefaults:
+  categories:
+    - CM Configuration Management
+  controls: 
+    - CM-2 Baseline Configuration
+  namespace: acm-policies
+  metadataComplianceType: "musthave"
+  complianceType: "mustonlyhave"
+  remediationAction: enforce
+  severity: medium
+  policySets:
+    - policyset-hub-clusterconfig
+  standards:
+    - NIST SP 800-53
+
+policies:
+####  Cluster Policy Starts For Hub cluster ####
+
+- name: conf-userworkloadmonitoring-hub
+  manifests:
+    - path: ./ingress-helm/overlays/prod/
+
+
+
+#### Hub Cluster Policy End ####
+      
+policySets:
+  - description: Policy set for the policies which are going to be deployed into Hub cluster only
+    name: policyset-hub-clusterconfig
+    placement:
+      placementName: placement-hub
+

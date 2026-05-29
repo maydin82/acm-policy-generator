@@ -1,0 +1,68 @@
+apiVersion: operator.openshift.io/v1
+kind: IngressController
+metadata:
+  name: default
+  namespace: openshift-ingress-operator
+  annotations:
+    ingress.operator.openshift.io/default-enable-http2: {{ .Values.http2Enabled | quote }}
+spec:
+  replicas: {{ .Values.replicas }}
+  clientTLS:
+    clientCA:
+      name: ""
+    clientCertificatePolicy: ""
+  httpCompression: {}
+  httpErrorCodePages:
+    name: ""
+  tuningOptions:
+    reloadInterval: 0s
+  unsupportedConfigOverrides: null
+  defaultCertificate:
+    name: {{ .Values.defaultCertificateName | quote }}
+  httpHeaders:
+    forwardedHeaderPolicy: {{ .Values.forwardedHeaderPolicy | quote }}
+
+  # Condition 1: Infra Enabled and External Router Disabled
+  {{- if and .Values.infraEnabled (not .Values.externalRouterEnabled) }}
+  nodePlacement:
+    nodeSelector:
+      matchLabels:
+        node-role.kubernetes.io/infra: ''
+    tolerations:
+      - effect: NoSchedule
+        key: infra
+        value: reserved
+      - effect: NoExecute
+        key: infra
+        value: reserved
+      - key: router
+        value: reserved
+        effect: NoSchedule
+      - key: router
+        value: reserved
+        effect: NoExecute
+  {{- end }}
+
+  # Condition 2: Infra Enabled and External Router Enabled
+  {{- if and .Values.infraEnabled .Values.externalRouterEnabled }}
+  nodePlacement:
+    nodeSelector:
+      matchLabels:
+        node-role.kubernetes.io/infra: ''
+    tolerations:
+      - key: router
+        value: reserved
+        effect: NoSchedule
+      - key: router
+        value: reserved
+        effect: NoExecute
+  {{- end }}
+
+  tlsSecurityProfile:
+    type: Custom
+    custom:
+      minTLSVersion: {{ .Values.minTLSVersion | quote }}
+      ciphers:
+        {{- range .Values.ciphers }}
+        - {{ . }}
+        {{- end }}
