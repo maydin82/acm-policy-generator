@@ -23,6 +23,7 @@ policies:
 ####  Cluster Policy Starts For Hub cluster ####
 
 - name: conf-userworkloadmonitoring-hub
+  remediationAction: InformOnly
   manifests:
     - path: ./ingress-helm/overlays/prod/
 
