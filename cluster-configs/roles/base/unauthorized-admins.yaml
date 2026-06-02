@@ -1,0 +1,31 @@
+apiVersion: policy.open-cluster-management.io/v1
+kind: ConfigurationPolicy
+metadata:
+  name: policy-check-unauthorized-cluster-admins
+spec:
+  remediationAction: inform
+  severity: high
+  object-templates-raw: |
+    {{- range (lookup "rbac.authorization.k8s.io/v1" "ClusterRoleBinding" "" "").items }}
+      {{- if eq .roleRef.name "cluster-admin" }}
+        {{- $isExcluded := false }}
+        {{- $currentName := .metadata.name }}
+        {{- /* 1. Automatically ignore any binding starting with "system:" */ -}}
+        {{- if hasPrefix "system:" $currentName }}
+          {{- $isExcluded = true }}
+        {{- end }}
+        {{- range (split "," "cluster-admin-sirius,cluster-admin-technician,cluster-admin,cluster-admins,cluster-network-operator,cluster-storage-operator-role,cluster-version-operator,custom-account-openshift-machine-config-operator,sirius-robot-binding,storage-version-migration-migrator,system:openshift:oauth-apiserver,system:openshift:openshift-apiserver") }}
+          {{- if eq . $currentName }}
+            {{- $isExcluded = true }}
+          {{- end }}
+        {{- end }}
+        {{- if not $isExcluded }}
+    - complianceType: mustnothave
+      objectDefinition:
+        apiVersion: rbac.authorization.k8s.io/v1
+        kind: ClusterRoleBinding
+        metadata:
+          name: {{ $currentName }}
+        {{- end }}
+      {{- end }}
+    {{- end }}
